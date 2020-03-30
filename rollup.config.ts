@@ -10,7 +10,7 @@ const pkg = require('./package.json')
 const libraryName = 'laravel-orion-ts-sdk'
 
 export default {
-  input: `src/Orion.ts`,
+  input: `src/orion.ts`,
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },

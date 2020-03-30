@@ -52,5 +52,11 @@
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",
     "typescript": "^3.6"
+  },
+  "dependencies": {
+    "@types/pluralize": "^0.0.29",
+    "axios": "^0.19.2",
+    "collect.js": "^4.20.3",
+    "pluralize": "^8.0.0"
   }
 }
