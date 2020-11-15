@@ -1,18 +1,18 @@
-import Model from './model'
-import QueryBuilder from './builders/queryBuilder'
+import Model from './model';
+import QueryBuilder from './builders/queryBuilder';
 
 export default abstract class Relation<R extends Model> {
 	constructor(protected modelReference: Model) {}
 
 	public query(): QueryBuilder<R> {
-		return new QueryBuilder(this.baseUrl())
+		return new QueryBuilder(this.baseUrl());
 	}
 
 	protected getModelReference(): Model {
-		return this.modelReference
+		return this.modelReference;
 	}
 
 	protected baseUrl(): string {
-		return this.getModelReference().url()
+		return this.getModelReference().url();
 	}
 }

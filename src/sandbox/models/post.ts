@@ -1,5 +1,5 @@
-import Model from '../../model'
+import Model from '../../model';
 
 export default class Post extends Model {
-	public id?: number
+	public id?: number;
 }
