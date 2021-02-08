@@ -1,13 +1,10 @@
 import QueryBuilder from './builders/queryBuilder';
 import Orion from './orion';
-import pluralize from 'pluralize';
+import * as pluralize from 'pluralize';
+import { noCase, snakeCase } from 'change-case';
 
 export default class Model {
 	protected keyName: string = 'id';
-
-	public static query<T extends typeof Model>(this: T): QueryBuilder<InstanceType<T>> {
-		return new QueryBuilder((<any>this).baseUrl());
-	}
 
 	public getKeyName(): string {
 		return this.keyName;
@@ -29,15 +26,19 @@ export default class Model {
 		return this;
 	}
 
-	protected resource(): string {
-		return pluralize.plural(this.constructor.name).toLowerCase();
+	public static query<M extends typeof Model>(this: M): QueryBuilder<InstanceType<M>> {
+		return new QueryBuilder(this.getBaseUrl());
 	}
 
-	protected baseUrl(): string {
-		return `${Orion.getApiUrl()}/${this.resource()}/`;
+	public static getResourceName<M extends typeof Model>(this: M): string {
+		return snakeCase(pluralize.plural(noCase(this.prototype.constructor.name)));
 	}
 
-	public url(): string {
-		return this.baseUrl() + this.getKey() + '/';
+	public static getBaseUrl<M extends typeof Model>(this: M): string {
+		return Orion.getApiUrl() + this.getResourceName();
+	}
+
+	public getUrl(): string {
+		return (this.constructor as typeof Model).getBaseUrl() + `/${this.getKey()}`;
 	}
 }

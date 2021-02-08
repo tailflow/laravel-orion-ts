@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Orion from '../orion';
 import { HttpMethod } from '../enums/httpMethod';
 import Model from '../model';
 
@@ -11,8 +10,10 @@ export default class QueryBuilder<M extends Model> {
 		this.baseUrl = baseUrl;
 	}
 
-	public async paginate(limit: number = 15) {
-		return await this.request('', HttpMethod.GET, { limit });
+	public async paginate(limit: number = 15): Promise<Array<M>> {
+		const response = await this.request('', HttpMethod.GET, { limit });
+
+		return response.data as Array<M>;
 	}
 
 	public async find(key: string | number): Promise<M> {

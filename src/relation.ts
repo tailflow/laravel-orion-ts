@@ -2,17 +2,17 @@ import Model from './model';
 import QueryBuilder from './builders/queryBuilder';
 
 export default abstract class Relation<R extends Model> {
-	constructor(protected modelReference: Model) {}
+	constructor(protected parent: Model) {}
 
 	public query(): QueryBuilder<R> {
 		return new QueryBuilder(this.baseUrl());
 	}
 
-	protected getModelReference(): Model {
-		return this.modelReference;
+	protected getParent(): Model {
+		return this.parent;
 	}
 
 	protected baseUrl(): string {
-		return this.getModelReference().url();
+		return this.getParent().getUrl();
 	}
 }
