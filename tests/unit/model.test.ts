@@ -1,5 +1,5 @@
-import Model from "../src/model";
-import Orion from "../src/orion";
+import Model from "../../src/model";
+import Orion from "../../src/orion";
 
 class ExampleModel extends Model {
 

@@ -1,4 +1,4 @@
-import Orion from "../src/orion";
+import Orion from "../../src/orion";
 
 describe('Orion tests', () => {
 	test('getting and setting api url', () => {
