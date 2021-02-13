@@ -1,43 +1,48 @@
 import axios from 'axios';
 import { HttpMethod } from '../enums/httpMethod';
 import Model from '../model';
+import ModelConstructor from '../contracts/modelConstructor';
 
 export default class QueryBuilder<M extends Model> {
 	protected baseUrl: string;
 	protected includes: string[] = [];
+	protected modelConstructor: ModelConstructor<M>;
 
-	constructor(baseUrl: string) {
+	constructor(baseUrl: string, modelConstructor: ModelConstructor<M>) {
 		this.baseUrl = baseUrl;
+		this.modelConstructor = modelConstructor;
 	}
 
 	public async paginate(limit: number = 15): Promise<Array<M>> {
 		const response = await this.request('', HttpMethod.GET, { limit });
 
-		return response.data as Array<M>;
+		return response.data.data.map((attributes: Record<string, any>) => {
+			return this.hydrate(attributes);
+		});
 	}
 
 	public async find(key: string | number): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.GET);
 
-		return response.data as M;
+		return this.hydrate(response.data.data);
 	}
 
 	public async store(attributes: any): Promise<M> {
 		const response = await this.request('', HttpMethod.POST, {}, attributes);
 
-		return response.data as M;
+		return this.hydrate(response.data.data);
 	}
 
 	public async update(key: string | number, attributes: any): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.PATCH, {}, attributes);
 
-		return response.data as M;
+		return this.hydrate(response.data.data);
 	}
 
 	public async destroy(key: string | number): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.DELETE);
 
-		return response.data as M;
+		return this.hydrate(response.data.data);
 	}
 
 	public with(relations: string[]): this {
@@ -56,6 +61,10 @@ export default class QueryBuilder<M extends Model> {
 		});
 
 		return response;
+	}
+
+	protected hydrate(attributes: Record<string, any>): M {
+		return new this.modelConstructor(attributes);
 	}
 
 	public getBaseUrl(): string {
