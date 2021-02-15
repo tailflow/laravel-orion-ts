@@ -1,10 +1,10 @@
 import {RestSerializer} from "miragejs";
 
 export let LaravelSerializer = RestSerializer.extend({
-	keyForCollection(modelName: string) {
+	keyForCollection() {
 		return 'data';
 	},
-	keyForModel(modelName: string) {
+	keyForModel() {
 		return 'data';
 	},
 })

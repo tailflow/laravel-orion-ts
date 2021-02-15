@@ -7,6 +7,6 @@ export default class UrlBuilder {
 	}
 
 	public static getResourceUrl(model: Model): string {
-		return UrlBuilder.getResourceBaseUrl(model.constructor.prototype) + `/${model.getKey()}`;
+		return UrlBuilder.getResourceBaseUrl(model.constructor as typeof Model) + `/${model.getKey()}`;
 	}
 }

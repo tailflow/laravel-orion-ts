@@ -25,15 +25,4 @@ describe('Model tests', () => {
 	test('getting resource name', () => {
 		expect(ExampleModel.getResourceName()).toBe('example_models');
 	});
-
-	test('getting base url', () => {
-		expect(ExampleModel.getBaseUrl()).toBe('https://example.com/api/example_models');
-	});
-
-	test('getting url', () => {
-		let model = new ExampleModel();
-		model.setKey(123);
-
-		expect(model.getUrl()).toBe('https://example.com/api/example_models/123');
-	});
 });
