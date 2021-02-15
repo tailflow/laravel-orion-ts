@@ -1,5 +1,5 @@
 import {createServer, Model as MirageModel} from "miragejs";
-import Orion from "../../../src/orion";
+import Orion from "../../src/orion";
 import {LaravelSerializer} from './serializer';
 
 export default function makeServer() {

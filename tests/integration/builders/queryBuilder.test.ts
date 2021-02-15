@@ -1,6 +1,6 @@
 import QueryBuilder from "../../../src/builders/queryBuilder";
-import Post from '../mocks/models/post';
-import makeServer from "../mocks/server";
+import Post from '../../mocks/models/post';
+import makeServer from "../../mocks/server";
 import UrlBuilder from "../../../src/builders/urlBuilder";
 
 let server: any;

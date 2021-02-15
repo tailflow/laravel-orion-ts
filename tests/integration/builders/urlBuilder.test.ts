@@ -1,5 +1,5 @@
 import UrlBuilder from "../../../src/builders/urlBuilder";
-import Post from "../mocks/models/post";
+import Post from "../../mocks/models/post";
 import Orion from "../../../src/orion";
 
 describe('UriBuilder tests', () => {
