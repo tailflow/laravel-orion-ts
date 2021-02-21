@@ -1,7 +1,6 @@
 import QueryBuilder from "../../../src/builders/queryBuilder";
 import Post from '../../mocks/models/post';
 import makeServer from "../../mocks/server";
-import UrlBuilder from "../../../src/builders/urlBuilder";
 
 let server: any;
 
@@ -15,11 +14,17 @@ afterEach(() => {
 
 describe('QueryBuilder tests', () => {
 
+	type PostAttributes = {
+		id?: string
+		title: string
+	};
+
 	test('retrieving a paginated list of resources', async () => {
 		server.schema.posts.create({title: 'Test Post A'});
 		server.schema.posts.create({title: 'Test Post B'});
 
-		const queryBuilder = new QueryBuilder<Post>(UrlBuilder.getResourceBaseUrl(Post), Post);
+
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 
 		const results = await queryBuilder.get();
 
@@ -29,7 +34,7 @@ describe('QueryBuilder tests', () => {
 	});
 
 	test('storing a resource', async () => {
-		const queryBuilder = new QueryBuilder<Post>(UrlBuilder.getResourceBaseUrl(Post), Post);
+		const queryBuilder = new QueryBuilder<Post,PostAttributes>(Post);
 
 		const post = await queryBuilder.store({
 			title: 'Test Post'
@@ -42,7 +47,7 @@ describe('QueryBuilder tests', () => {
 	test('retrieving a resource', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
-		const queryBuilder = new QueryBuilder<Post>(UrlBuilder.getResourceBaseUrl(Post), Post);
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 
 		const post = await queryBuilder.find('1');
 
@@ -52,7 +57,7 @@ describe('QueryBuilder tests', () => {
 	test('updating a resource', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
-		const queryBuilder = new QueryBuilder<Post>(UrlBuilder.getResourceBaseUrl(Post), Post);
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 
 		const post = await queryBuilder.update('1', {
 			title: 'Updated Post'
@@ -65,7 +70,7 @@ describe('QueryBuilder tests', () => {
 	test('deleting a resource', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
-		const queryBuilder = new QueryBuilder<Post>(UrlBuilder.getResourceBaseUrl(Post), Post);
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 
 		const post = await queryBuilder.destroy('1');
 

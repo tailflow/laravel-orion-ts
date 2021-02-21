@@ -8,10 +8,11 @@ import { FilterOperator } from '../enums/filterOperator';
 import { FilterType } from '../enums/filterType';
 import Sorter from '../sorter';
 import { SortDirection } from '../enums/sortDirection';
+import UrlBuilder from './urlBuilder';
 
-export default class QueryBuilder<M extends Model> {
+export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 	protected baseUrl: string;
-	protected modelConstructor: ModelConstructor<M>;
+	protected modelConstructor: ModelConstructor<M, Attributes>;
 
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
@@ -22,15 +23,20 @@ export default class QueryBuilder<M extends Model> {
 	protected sorters: Array<Sorter> = [];
 	protected searchValue?: string;
 
-	constructor(baseUrl: string, modelConstructor: ModelConstructor<M>) {
-		this.baseUrl = baseUrl;
+	constructor(modelConstructor: ModelConstructor<M, Attributes>, baseUrl?: string) {
+		if (baseUrl) {
+			this.baseUrl = baseUrl;
+		} else {
+			this.baseUrl = UrlBuilder.getResourceBaseUrl(modelConstructor);
+		}
+
 		this.modelConstructor = modelConstructor;
 	}
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
 		const response = await this.request('', HttpMethod.GET, { limit, page });
 
-		return response.data.data.map((attributes: Record<string, any>) => {
+		return response.data.data.map((attributes: Attributes) => {
 			return this.hydrate(attributes);
 		});
 	}
@@ -48,7 +54,7 @@ export default class QueryBuilder<M extends Model> {
 			}
 		);
 
-		return response.data.data.map((attributes: Record<string, any>) => {
+		return response.data.data.map((attributes: Attributes) => {
 			return this.hydrate(attributes);
 		});
 	}
@@ -59,13 +65,13 @@ export default class QueryBuilder<M extends Model> {
 		return this.hydrate(response.data.data);
 	}
 
-	public async store(attributes: any): Promise<M> {
+	public async store(attributes: Attributes): Promise<M> {
 		const response = await this.request('', HttpMethod.POST, {}, attributes);
 
 		return this.hydrate(response.data.data);
 	}
 
-	public async update(key: string | number, attributes: any): Promise<M> {
+	public async update(key: string | number, attributes: Attributes): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.PATCH, {}, attributes);
 
 		return this.hydrate(response.data.data);
@@ -137,7 +143,7 @@ export default class QueryBuilder<M extends Model> {
 		return response;
 	}
 
-	protected hydrate(attributes: Record<string, any>): M {
+	protected hydrate(attributes: Attributes): M {
 		return new this.modelConstructor(attributes);
 	}
 

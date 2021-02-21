@@ -4,10 +4,10 @@ import { noCase, snakeCase } from 'change-case';
 import UrlBuilder from './builders/urlBuilder';
 import ModelConstructor from './contracts/modelConstructor';
 
-export default class Model {
-	public id!: number | string;
+export default class Model<Attributes> {
+	public attributes!: Attributes;
 
-	constructor(attributes?: Record<string, any>) {
+	constructor(attributes?: Attributes) {
 		if (attributes) {
 			this.fill(attributes);
 		}
@@ -26,31 +26,35 @@ export default class Model {
 	}
 
 	public getKey(): number | string {
-		return this[this.getKeyName()];
+		return this.attributes[this.getKeyName()];
 	}
 
 	public setKey(key: number | string): this {
-		this[this.getKeyName()] = key;
+		this.attributes[this.getKeyName()] = key;
 
 		return this;
 	}
 
-	public fill(attributes: Record<string, any>): this {
+	public fill(attributes: Attributes): this {
+		if (!this.attributes) {
+			this.attributes = {} as Attributes;
+		}
+
 		for (const attribute in attributes) {
-			this[attribute] = attributes[attribute];
+			this.attributes[attribute] = attributes[attribute];
 		}
 
 		return this;
 	}
 
-	public static query<M extends typeof Model>(this: M): QueryBuilder<InstanceType<M>> {
-		return new QueryBuilder(
-			UrlBuilder.getResourceBaseUrl(this),
-			this.constructor as ModelConstructor<InstanceType<M>>
+	public query(): QueryBuilder<this, Attributes> {
+		return new QueryBuilder<this, Attributes>(
+			UrlBuilder.getResourceBaseUrl(this.constructor as typeof Model),
+			this.constructor as ModelConstructor<this, Attributes>
 		);
 	}
 
-	public static getResourceName<M extends typeof Model>(this: M): string {
-		return snakeCase(pluralize.plural(noCase(this.prototype.constructor.name)));
+	public getResourceName(): string {
+		return snakeCase(pluralize.plural(noCase(this.constructor.name)));
 	}
 }
