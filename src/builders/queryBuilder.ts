@@ -2,19 +2,51 @@ import axios from 'axios';
 import { HttpMethod } from '../enums/httpMethod';
 import Model from '../model';
 import ModelConstructor from '../contracts/modelConstructor';
+import Scope from '../scope';
+import Filter from '../filter';
+import { FilterOperator } from '../enums/filterOperator';
+import { FilterType } from '../enums/filterType';
+import Sorter from '../sorter';
+import { SortDirection } from '../enums/sortDirection';
 
 export default class QueryBuilder<M extends Model> {
 	protected baseUrl: string;
-	protected includes: string[] = [];
 	protected modelConstructor: ModelConstructor<M>;
+
+	protected includes: string[] = [];
+	protected fetchTrashed: boolean = false;
+	protected fetchOnlyTrashed: boolean = false;
+
+	protected scopes: Array<Scope> = [];
+	protected filters: Array<Filter> = [];
+	protected sorters: Array<Sorter> = [];
+	protected searchValue?: string;
 
 	constructor(baseUrl: string, modelConstructor: ModelConstructor<M>) {
 		this.baseUrl = baseUrl;
 		this.modelConstructor = modelConstructor;
 	}
 
-	public async paginate(limit: number = 15): Promise<Array<M>> {
-		const response = await this.request('', HttpMethod.GET, { limit });
+	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
+		const response = await this.request('', HttpMethod.GET, { limit, page });
+
+		return response.data.data.map((attributes: Record<string, any>) => {
+			return this.hydrate(attributes);
+		});
+	}
+
+	public async search(limit: number = 15, page: number = 1): Promise<Array<M>> {
+		const response = await this.request(
+			'',
+			HttpMethod.POST,
+			{ limit, page },
+			{
+				scopes: this.scopes,
+				filters: this.filters,
+				search: this.searchValue,
+				sort: this.sorters
+			}
+		);
 
 		return response.data.data.map((attributes: Record<string, any>) => {
 			return this.hydrate(attributes);
@@ -39,14 +71,56 @@ export default class QueryBuilder<M extends Model> {
 		return this.hydrate(response.data.data);
 	}
 
-	public async destroy(key: string | number): Promise<M> {
-		const response = await this.request(`${key}`, HttpMethod.DELETE);
+	public async destroy(key: string | number, force: boolean = false): Promise<M> {
+		const response = await this.request(`${key}`, HttpMethod.DELETE, { force });
+
+		return this.hydrate(response.data.data);
+	}
+
+	public async restore(key: string | number): Promise<M> {
+		const response = await this.request(`${key}/restore`, HttpMethod.POST);
 
 		return this.hydrate(response.data.data);
 	}
 
 	public with(relations: string[]): this {
 		this.includes = relations;
+
+		return this;
+	}
+
+	public withTrashed(): this {
+		this.fetchTrashed = true;
+
+		return this;
+	}
+
+	public onlyTrashed(): this {
+		this.fetchOnlyTrashed = true;
+
+		return this;
+	}
+
+	public scope(name: string, parameters: Array<any> = []): this {
+		this.scopes.push(new Scope(name, parameters));
+
+		return this;
+	}
+
+	public filter(field: string, operator: FilterOperator, value: any, type?: FilterType): this {
+		this.filters.push(new Filter(field, operator, value, type));
+
+		return this;
+	}
+
+	public sort(field: string, direction: SortDirection = SortDirection.Asc): this {
+		this.sorters.push(new Sorter(field, direction));
+
+		return this;
+	}
+
+	public lookFor(value: string): this {
+		this.searchValue = value;
 
 		return this;
 	}

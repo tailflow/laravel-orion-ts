@@ -21,7 +21,7 @@ describe('QueryBuilder tests', () => {
 
 		const queryBuilder = new QueryBuilder<Post>(UrlBuilder.getResourceBaseUrl(Post), Post);
 
-		const results = await queryBuilder.paginate();
+		const results = await queryBuilder.get();
 
 		expect(results[0]).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post A'}));
 		expect(results[1]).toStrictEqual<Post>(new Post({id: '2', title: 'Test Post B'}));
