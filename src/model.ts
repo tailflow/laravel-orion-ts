@@ -1,7 +1,6 @@
 import QueryBuilder from './builders/queryBuilder';
 import * as pluralize from 'pluralize';
 import { noCase, snakeCase } from 'change-case';
-import UrlBuilder from './builders/urlBuilder';
 import ModelConstructor from './contracts/modelConstructor';
 
 export default class Model<Attributes> {
@@ -49,7 +48,6 @@ export default class Model<Attributes> {
 
 	public query(): QueryBuilder<this, Attributes> {
 		return new QueryBuilder<this, Attributes>(
-			UrlBuilder.getResourceBaseUrl(this.constructor as typeof Model),
 			this.constructor as ModelConstructor<this, Attributes>
 		);
 	}
