@@ -34,7 +34,11 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 	}
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.request('', HttpMethod.GET, { limit, page });
+		const response = await this.request(
+			'',
+			HttpMethod.GET,
+			this.prepareQueryParams({ limit, page })
+		);
 
 		return response.data.data.map((attributes: Attributes) => {
 			return this.hydrate(attributes, response);
@@ -45,7 +49,7 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		const response = await this.request(
 			'/search',
 			HttpMethod.POST,
-			{ limit, page },
+			this.prepareQueryParams({ limit, page }),
 			{
 				scopes: this.scopes,
 				filters: this.filters,
@@ -60,31 +64,44 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 	}
 
 	public async find(key: string | number): Promise<M> {
-		const response = await this.request(`${key}`, HttpMethod.GET);
+		const response = await this.request(`${key}`, HttpMethod.GET, this.prepareQueryParams());
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async store(attributes: Attributes): Promise<M> {
-		const response = await this.request('', HttpMethod.POST, {}, attributes);
+		const response = await this.request('', HttpMethod.POST, this.prepareQueryParams(), attributes);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async update(key: string | number, attributes: Attributes): Promise<M> {
-		const response = await this.request(`${key}`, HttpMethod.PATCH, {}, attributes);
+		const response = await this.request(
+			`${key}`,
+			HttpMethod.PATCH,
+			this.prepareQueryParams(),
+			attributes
+		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async destroy(key: string | number, force: boolean = false): Promise<M> {
-		const response = await this.request(`${key}`, HttpMethod.DELETE, { force });
+		const response = await this.request(
+			`${key}`,
+			HttpMethod.DELETE,
+			this.prepareQueryParams({ force })
+		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async restore(key: string | number): Promise<M> {
-		const response = await this.request(`${key}/restore`, HttpMethod.POST);
+		const response = await this.request(
+			`${key}/restore`,
+			HttpMethod.POST,
+			this.prepareQueryParams()
+		);
 
 		return this.hydrate(response.data.data, response);
 	}
@@ -131,16 +148,8 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		return this;
 	}
 
-	private async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
-		let response = await axios.request({
-			baseURL: this.getBaseUrl(),
-			url,
-			method,
-			params: Object.assign(params, { include: this.getIncludes() }),
-			data
-		});
-
-		return response;
+	protected async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
+		return axios.request({ baseURL: this.getBaseUrl(), url, method, params, data });
 	}
 
 	protected hydrate(attributes: Attributes, response: AxiosResponse): M {
@@ -149,6 +158,22 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		model.$response = response;
 
 		return model;
+	}
+
+	protected prepareQueryParams(operationParams: any = {}): any {
+		if (this.fetchOnlyTrashed) {
+			operationParams.only_trashed = true;
+		}
+
+		if (this.fetchTrashed) {
+			operationParams.with_trashed = true;
+		}
+
+		if (this.includes.length > 0) {
+			operationParams.include = this.includes.join(',');
+		}
+
+		return operationParams;
 	}
 
 	public getBaseUrl(): string {
