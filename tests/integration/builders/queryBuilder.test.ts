@@ -1,6 +1,9 @@
 import QueryBuilder from "../../../src/builders/queryBuilder";
 import Post from '../../mocks/models/post';
 import makeServer from "../../mocks/server";
+import {FilterOperator} from "../../../src/enums/filterOperator";
+import {FilterType} from "../../../src/enums/filterType";
+import {SortDirection} from "../../../src/enums/sortDirection";
 
 let server: any;
 
@@ -24,7 +27,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post B'});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-
 		const results = await queryBuilder.get();
 
 		results.forEach((result) => {
@@ -37,9 +39,41 @@ describe('QueryBuilder tests', () => {
 		expect(results.length).toBe(2);
 	});
 
-	test('storing a resource', async () => {
-		const queryBuilder = new QueryBuilder<Post,PostAttributes>(Post);
+	test('searching for resources', async () => {
+		server.schema.posts.create({title: 'Test Post A'});
+		server.schema.posts.create({title: 'Test Post B'});
 
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
+		const results = await queryBuilder
+			.scope('test scope', [1, 2, 3])
+			.filter('test field', FilterOperator.GreaterThanOrEqual, 'test value', FilterType.Or)
+			.lookFor('test keyword')
+			.sortBy('test field', SortDirection.Desc)
+			.search();
+
+		results.forEach((result) => {
+			expect(result).toBeInstanceOf(Post);
+		});
+
+		const searchParameters = {
+			scopes: [{name: 'test scope', parameters: [1, 2, 3]}],
+			filters: [{field: 'test field', operator: FilterOperator.GreaterThanOrEqual, value: 'test value', type: FilterType.Or}],
+			search: {value: 'test keyword'},
+			sort: [{field: 'test field', direction: SortDirection.Desc}]
+		};
+
+		expect(results[0].attributes).toStrictEqual(Object.assign({
+			id: '1',
+			title: 'Test Post A'
+		}, searchParameters));
+		expect(results[1].attributes).toStrictEqual(Object.assign({
+			id: '2',
+			title: 'Test Post B'
+		}, searchParameters));
+	});
+
+	test('storing a resource', async () => {
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		const post = await queryBuilder.store({
 			title: 'Test Post'
 		});
@@ -53,7 +87,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post'});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-
 		const post = await queryBuilder.find('1');
 
 		expect(post).toBeInstanceOf(Post);
@@ -64,7 +97,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post'});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-
 		const post = await queryBuilder.update('1', {
 			title: 'Updated Post'
 		});
@@ -78,7 +110,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post'});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-
 		const post = await queryBuilder.destroy('1');
 
 		expect(post).toBeInstanceOf(Post);
@@ -90,7 +121,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post', deleted_at: Date.now()});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-
 		const post = await queryBuilder.restore('1');
 
 		expect(post).toBeInstanceOf(Post);
@@ -102,7 +132,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post'});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-
 		const post = await queryBuilder.destroy('1', true);
 
 		expect(post).toBeInstanceOf(Post);

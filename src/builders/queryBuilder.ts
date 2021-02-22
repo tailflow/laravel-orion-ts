@@ -43,13 +43,13 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 
 	public async search(limit: number = 15, page: number = 1): Promise<Array<M>> {
 		const response = await this.request(
-			'',
+			'/search',
 			HttpMethod.POST,
 			{ limit, page },
 			{
 				scopes: this.scopes,
 				filters: this.filters,
-				search: this.searchValue,
+				search: { value: this.searchValue },
 				sort: this.sorters
 			}
 		);
@@ -119,7 +119,7 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		return this;
 	}
 
-	public sort(field: string, direction: SortDirection = SortDirection.Asc): this {
+	public sortBy(field: string, direction: SortDirection = SortDirection.Asc): this {
 		this.sorters.push(new Sorter(field, direction));
 
 		return this;

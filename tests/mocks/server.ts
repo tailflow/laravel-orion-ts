@@ -1,6 +1,7 @@
-import {createServer, Model as MirageModel} from "miragejs";
+import {Collection, createServer, Model as MirageModel} from "miragejs";
 import Orion from "../../src/orion";
 import {LaravelSerializer} from './serializer';
+import {ModelInstance} from "miragejs/-types";
 
 export default function makeServer() {
 	return createServer({
@@ -19,10 +20,28 @@ export default function makeServer() {
 			this.namespace = "api";
 
 			this.get("/posts");
+
 			this.post("/posts", function (schema: any, request) {
 				const attrs = JSON.parse(request.requestBody);
 
 				return schema.posts.create(attrs);
+			});
+
+			this.post("/posts/search", function (schema: any, request) {
+				let posts: Collection<ModelInstance> = schema.posts.all();
+
+				const payload = JSON.parse(request.requestBody);
+
+				posts.models = posts.models.map((post) => {
+					post.attrs.scopes = payload.scopes;
+					post.attrs.filters = payload.filters;
+					post.attrs.search = payload.search;
+					post.attrs.sort = payload.sort;
+
+					return post;
+				});
+
+				return posts;
 			});
 
 			this.get("/posts/:id");
