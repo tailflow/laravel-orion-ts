@@ -18,7 +18,6 @@ afterEach(() => {
 describe('QueryBuilder tests', () => {
 
 	type PostAttributes = {
-		id?: string
 		title: string
 	};
 

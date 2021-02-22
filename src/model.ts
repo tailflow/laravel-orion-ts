@@ -3,12 +3,16 @@ import * as pluralize from 'pluralize';
 import { noCase, snakeCase } from 'change-case';
 import ModelConstructor from './contracts/modelConstructor';
 import { AxiosResponse } from 'axios';
+import { DefaultPersistedAttributes } from './types/defaultPersistedAttributes';
 
-export default class Model<Attributes> {
-	public attributes!: Attributes;
+export default class Model<
+	Attributes,
+	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+> {
+	public attributes!: PersistedAttributes;
 	public $response!: AxiosResponse;
 
-	constructor(attributes?: Attributes) {
+	constructor(attributes?: PersistedAttributes) {
 		this.initAttributesIfUndefined();
 		if (attributes) {
 			this.fill(attributes);
@@ -37,7 +41,7 @@ export default class Model<Attributes> {
 		return this;
 	}
 
-	public fill(attributes: Attributes): this {
+	public fill(attributes: PersistedAttributes): this {
 		this.initAttributesIfUndefined();
 
 		for (const attribute in attributes) {
@@ -47,13 +51,13 @@ export default class Model<Attributes> {
 		return this;
 	}
 
-	public query(): QueryBuilder<this, Attributes> {
-		return new QueryBuilder<this, Attributes>(
-			this.constructor as ModelConstructor<this, Attributes>
+	public query(): QueryBuilder<this, Attributes, PersistedAttributes> {
+		return new QueryBuilder<this, Attributes, PersistedAttributes>(
+			this.constructor as ModelConstructor<this, Attributes, PersistedAttributes>
 		);
 	}
 
-	public is(model: Model<Attributes>): boolean {
+	public is(model: Model<Attributes, PersistedAttributes>): boolean {
 		return this.getKey() === model.getKey();
 	}
 
@@ -63,7 +67,7 @@ export default class Model<Attributes> {
 
 	protected initAttributesIfUndefined() {
 		if (!this.attributes) {
-			this.attributes = {} as Attributes;
+			this.attributes = {} as PersistedAttributes;
 		}
 	}
 }

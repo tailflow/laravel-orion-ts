@@ -9,10 +9,15 @@ import { FilterType } from '../enums/filterType';
 import Sorter from '../sorter';
 import { SortDirection } from '../enums/sortDirection';
 import UrlBuilder from './urlBuilder';
+import { DefaultPersistedAttributes } from '../types/defaultPersistedAttributes';
 
-export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
+export default class QueryBuilder<
+	M extends Model<Attributes, PersistedAttributes>,
+	Attributes,
+	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+> {
 	protected baseUrl: string;
-	protected modelConstructor: ModelConstructor<M, Attributes>;
+	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes>;
 
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
@@ -23,7 +28,10 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 	protected sorters: Array<Sorter> = [];
 	protected searchValue?: string;
 
-	constructor(modelConstructor: ModelConstructor<M, Attributes>, baseUrl?: string) {
+	constructor(
+		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes>,
+		baseUrl?: string
+	) {
 		if (baseUrl) {
 			this.baseUrl = baseUrl;
 		} else {
@@ -40,7 +48,7 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 			this.prepareQueryParams({ limit, page })
 		);
 
-		return response.data.data.map((attributes: Attributes) => {
+		return response.data.data.map((attributes: PersistedAttributes) => {
 			return this.hydrate(attributes, response);
 		});
 	}
@@ -58,7 +66,7 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 			}
 		);
 
-		return response.data.data.map((attributes: Attributes) => {
+		return response.data.data.map((attributes: PersistedAttributes) => {
 			return this.hydrate(attributes, response);
 		});
 	}
@@ -149,10 +157,10 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 	}
 
 	protected async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
-		return axios.request({ baseURL: this.getBaseUrl(), url, method, params, data });
+		return axios.request({ baseURL: this.baseUrl, url, method, params, data });
 	}
 
-	protected hydrate(attributes: Attributes, response: AxiosResponse): M {
+	protected hydrate(attributes: PersistedAttributes, response: AxiosResponse): M {
 		const model = new this.modelConstructor(attributes);
 
 		model.$response = response;
@@ -174,13 +182,5 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		}
 
 		return operationParams;
-	}
-
-	public getBaseUrl(): string {
-		return this.baseUrl;
-	}
-
-	public getIncludes(): string[] {
-		return this.includes;
 	}
 }
