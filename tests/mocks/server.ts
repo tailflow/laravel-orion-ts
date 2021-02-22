@@ -24,8 +24,9 @@ export default function makeServer() {
 
 				return schema.posts.create(attrs);
 			});
+
 			this.get("/posts/:id");
-			this.patch("/posts/:id",  (schema: any, request) => {
+			this.patch("/posts/:id", (schema: any, request) => {
 				const id = request.params.id
 				const attrs = JSON.parse(request.requestBody);
 
@@ -33,13 +34,25 @@ export default function makeServer() {
 
 				return post.update(attrs)
 			});
+
 			this.del("/posts/:id", (schema: any, request) => {
 				const id = request.params.id;
 				const post = schema.posts.find(id);
 
-				post.destroy();
+				if (request.queryParams.force === 'true') {
+					post.destroy();
+				} else {
+					post.update({deleted_at: '2021-01-01'});
+				}
 
 				return post;
+			});
+
+			this.post("/posts/:id/restore", (schema: any, request) => {
+				const id = request.params.id;
+				const post = schema.posts.find(id);
+
+				return post.update({deleted_at: null});
 			});
 		},
 	});

@@ -66,12 +66,34 @@ describe('QueryBuilder tests', () => {
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 	});
 
-	test('deleting a resource', async () => {
+	test('trashing a resource', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 
 		const post = await queryBuilder.destroy('1');
+
+		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post', deleted_at: '2021-01-01'}));
+		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
+	});
+
+	test('restoring a resource', async () => {
+		server.schema.posts.create({title: 'Test Post', deleted_at: Date.now()});
+
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
+
+		const post = await queryBuilder.restore('1');
+
+		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post', deleted_at: null}));
+		expect(server.schema.posts.find('1').attrs.deleted_at).toBeNull();
+	});
+
+	test('force deleting a resource', async () => {
+		server.schema.posts.create({title: 'Test Post'});
+
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
+
+		const post = await queryBuilder.destroy('1', true);
 
 		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post'}));
 		expect(server.schema.posts.find('1')).toBeNull();

@@ -1,4 +1,5 @@
 import {RestSerializer} from "miragejs";
+import {snakeCase} from "change-case";
 
 export let LaravelSerializer = RestSerializer.extend({
 	keyForCollection() {
@@ -6,5 +7,8 @@ export let LaravelSerializer = RestSerializer.extend({
 	},
 	keyForModel() {
 		return 'data';
+	},
+	keyForAttribute(attr) {
+		return snakeCase(attr);
 	},
 })
