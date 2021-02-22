@@ -1,9 +1,9 @@
-import QueryBuilder from "../../../src/builders/queryBuilder";
-import Post from '../../mocks/models/post';
-import makeServer from "../../mocks/server";
-import {FilterOperator} from "../../../src/enums/filterOperator";
-import {FilterType} from "../../../src/enums/filterType";
-import {SortDirection} from "../../../src/enums/sortDirection";
+import QueryBuilder from "../../../../../src/drivers/default/builders/queryBuilder";
+import Post from '../../../../mocks/models/post';
+import makeServer from "../server";
+import {FilterOperator} from "../../../../../src/drivers/default/enums/filterOperator";
+import {FilterType} from "../../../../../src/drivers/default/enums/filterType";
+import {SortDirection} from "../../../../../src/drivers/default/enums/sortDirection";
 
 let server: any;
 

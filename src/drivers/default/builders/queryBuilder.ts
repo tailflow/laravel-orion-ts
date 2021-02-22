@@ -1,15 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 import { HttpMethod } from '../enums/httpMethod';
-import Model from '../model';
-import ModelConstructor from '../contracts/modelConstructor';
+import Model from '../../../model';
+import ModelConstructor from '../../../contracts/modelConstructor';
 import Scope from '../scope';
 import Filter from '../filter';
 import { FilterOperator } from '../enums/filterOperator';
 import { FilterType } from '../enums/filterType';
 import Sorter from '../sorter';
 import { SortDirection } from '../enums/sortDirection';
-import UrlBuilder from './urlBuilder';
-import { DefaultPersistedAttributes } from '../types/defaultPersistedAttributes';
+import UrlBuilder from '../../../builders/urlBuilder';
+import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
 
 export default class QueryBuilder<
 	M extends Model<Attributes, PersistedAttributes>,

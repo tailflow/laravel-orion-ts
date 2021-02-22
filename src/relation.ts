@@ -1,5 +1,5 @@
 import Model from './model';
-import QueryBuilder from './builders/queryBuilder';
+import QueryBuilder from './drivers/default/builders/queryBuilder';
 
 export default abstract class Relation<R extends Model> {
 	constructor(protected parent: Model) {}

@@ -1,4 +1,4 @@
-import QueryBuilder from './builders/queryBuilder';
+import QueryBuilder from './drivers/default/builders/queryBuilder';
 import * as pluralize from 'pluralize';
 import { noCase, snakeCase } from 'change-case';
 import ModelConstructor from './contracts/modelConstructor';
