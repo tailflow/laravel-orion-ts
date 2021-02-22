@@ -7,6 +7,7 @@ export default class Model<Attributes> {
 	public attributes!: Attributes;
 
 	constructor(attributes?: Attributes) {
+		this.initAttributesIfUndefined();
 		if (attributes) {
 			this.fill(attributes);
 		}
@@ -35,9 +36,7 @@ export default class Model<Attributes> {
 	}
 
 	public fill(attributes: Attributes): this {
-		if (!this.attributes) {
-			this.attributes = {} as Attributes;
-		}
+		this.initAttributesIfUndefined();
 
 		for (const attribute in attributes) {
 			this.attributes[attribute] = attributes[attribute];
@@ -54,5 +53,11 @@ export default class Model<Attributes> {
 
 	public getResourceName(): string {
 		return snakeCase(pluralize.plural(noCase(this.constructor.name)));
+	}
+
+	protected initAttributesIfUndefined() {
+		if (!this.attributes) {
+			this.attributes = {} as Attributes;
+		}
 	}
 }

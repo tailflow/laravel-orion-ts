@@ -23,7 +23,6 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({title: 'Test Post A'});
 		server.schema.posts.create({title: 'Test Post B'});
 
-
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 
 		const results = await queryBuilder.get();

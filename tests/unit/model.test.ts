@@ -1,7 +1,9 @@
 import Model from "../../src/model";
 import Orion from "../../src/orion";
 
-class ExampleModel extends Model {
+class ExampleModel extends Model<{
+	id: string
+}> {
 
 }
 
@@ -23,6 +25,6 @@ describe('Model tests', () => {
 	});
 
 	test('getting resource name', () => {
-		expect(ExampleModel.getResourceName()).toBe('example_models');
+		expect(ExampleModel.prototype.getResourceName()).toBe('example_models');
 	});
 });
