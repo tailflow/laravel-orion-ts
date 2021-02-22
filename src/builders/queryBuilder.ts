@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { HttpMethod } from '../enums/httpMethod';
 import Model from '../model';
 import ModelConstructor from '../contracts/modelConstructor';
@@ -37,7 +37,7 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		const response = await this.request('', HttpMethod.GET, { limit, page });
 
 		return response.data.data.map((attributes: Attributes) => {
-			return this.hydrate(attributes);
+			return this.hydrate(attributes, response);
 		});
 	}
 
@@ -55,38 +55,38 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		);
 
 		return response.data.data.map((attributes: Attributes) => {
-			return this.hydrate(attributes);
+			return this.hydrate(attributes, response);
 		});
 	}
 
 	public async find(key: string | number): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.GET);
 
-		return this.hydrate(response.data.data);
+		return this.hydrate(response.data.data, response);
 	}
 
 	public async store(attributes: Attributes): Promise<M> {
 		const response = await this.request('', HttpMethod.POST, {}, attributes);
 
-		return this.hydrate(response.data.data);
+		return this.hydrate(response.data.data, response);
 	}
 
 	public async update(key: string | number, attributes: Attributes): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.PATCH, {}, attributes);
 
-		return this.hydrate(response.data.data);
+		return this.hydrate(response.data.data, response);
 	}
 
 	public async destroy(key: string | number, force: boolean = false): Promise<M> {
 		const response = await this.request(`${key}`, HttpMethod.DELETE, { force });
 
-		return this.hydrate(response.data.data);
+		return this.hydrate(response.data.data, response);
 	}
 
 	public async restore(key: string | number): Promise<M> {
 		const response = await this.request(`${key}/restore`, HttpMethod.POST);
 
-		return this.hydrate(response.data.data);
+		return this.hydrate(response.data.data, response);
 	}
 
 	public with(relations: string[]): this {
@@ -143,8 +143,12 @@ export default class QueryBuilder<M extends Model<Attributes>, Attributes> {
 		return response;
 	}
 
-	protected hydrate(attributes: Attributes): M {
-		return new this.modelConstructor(attributes);
+	protected hydrate(attributes: Attributes, response: AxiosResponse): M {
+		const model = new this.modelConstructor(attributes);
+
+		model.$response = response;
+
+		return model;
 	}
 
 	public getBaseUrl(): string {

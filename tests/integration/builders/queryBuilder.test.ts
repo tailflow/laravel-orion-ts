@@ -27,8 +27,13 @@ describe('QueryBuilder tests', () => {
 
 		const results = await queryBuilder.get();
 
-		expect(results[0]).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post A'}));
-		expect(results[1]).toStrictEqual<Post>(new Post({id: '2', title: 'Test Post B'}));
+		results.forEach((result) => {
+			expect(result).toBeInstanceOf(Post);
+		});
+
+		expect(results[0].attributes).toStrictEqual({id: '1', title: 'Test Post A'});
+		expect(results[1].attributes).toStrictEqual({id: '2', title: 'Test Post B'});
+
 		expect(results.length).toBe(2);
 	});
 
@@ -39,7 +44,8 @@ describe('QueryBuilder tests', () => {
 			title: 'Test Post'
 		});
 
-		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post'}));
+		expect(post).toBeInstanceOf(Post);
+		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Test Post');
 	});
 
@@ -50,7 +56,8 @@ describe('QueryBuilder tests', () => {
 
 		const post = await queryBuilder.find('1');
 
-		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post'}));
+		expect(post).toBeInstanceOf(Post);
+		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
 	});
 
 	test('updating a resource', async () => {
@@ -62,7 +69,8 @@ describe('QueryBuilder tests', () => {
 			title: 'Updated Post'
 		});
 
-		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Updated Post'}));
+		expect(post).toBeInstanceOf(Post);
+		expect(post.attributes).toStrictEqual({id: '1', title: 'Updated Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 	});
 
@@ -73,7 +81,8 @@ describe('QueryBuilder tests', () => {
 
 		const post = await queryBuilder.destroy('1');
 
-		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post', deleted_at: '2021-01-01'}));
+		expect(post).toBeInstanceOf(Post);
+		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: '2021-01-01'});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
 	});
 
@@ -84,7 +93,8 @@ describe('QueryBuilder tests', () => {
 
 		const post = await queryBuilder.restore('1');
 
-		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post', deleted_at: null}));
+		expect(post).toBeInstanceOf(Post);
+		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: null});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeNull();
 	});
 
@@ -95,7 +105,8 @@ describe('QueryBuilder tests', () => {
 
 		const post = await queryBuilder.destroy('1', true);
 
-		expect(post).toStrictEqual<Post>(new Post({id: '1', title: 'Test Post'}));
+		expect(post).toBeInstanceOf(Post);
+		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
 		expect(server.schema.posts.find('1')).toBeNull();
 	});
 

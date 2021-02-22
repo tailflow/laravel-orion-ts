@@ -2,9 +2,11 @@ import QueryBuilder from './builders/queryBuilder';
 import * as pluralize from 'pluralize';
 import { noCase, snakeCase } from 'change-case';
 import ModelConstructor from './contracts/modelConstructor';
+import { AxiosResponse } from 'axios';
 
 export default class Model<Attributes> {
 	public attributes!: Attributes;
+	public $response!: AxiosResponse;
 
 	constructor(attributes?: Attributes) {
 		this.initAttributesIfUndefined();
@@ -49,6 +51,10 @@ export default class Model<Attributes> {
 		return new QueryBuilder<this, Attributes>(
 			this.constructor as ModelConstructor<this, Attributes>
 		);
+	}
+
+	public is(model: Model<Attributes>): boolean {
+		return this.getKey() === model.getKey();
 	}
 
 	public getResourceName(): string {

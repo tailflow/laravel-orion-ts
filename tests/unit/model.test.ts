@@ -1,30 +1,26 @@
-import Model from "../../src/model";
 import Orion from "../../src/orion";
-
-class ExampleModel extends Model<{
-	id: string
-}> {
-
-}
+import Post from "../mocks/models/post";
 
 Orion.setApiUrl('https://example.com/api');
 
 describe('Model tests', () => {
+
 	test('setting and getting key name', () => {
-		let model = new ExampleModel();
+		let model = new Post();
 		model.setKeyName('custom_key');
 
 		expect(model.getKeyName()).toBe('custom_key');
 	});
 
 	test('setting and getting key', () => {
-		let model = new ExampleModel();
+		let model = new Post();
 		model.setKey(123);
 
 		expect(model.getKey()).toBe(123);
 	});
 
 	test('getting resource name', () => {
-		expect(ExampleModel.prototype.getResourceName()).toBe('example_models');
+		expect(Post.prototype.getResourceName()).toBe('posts');
 	});
+
 });
