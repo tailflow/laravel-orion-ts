@@ -1,6 +1,7 @@
 import Orion from "../../src/orion";
 
 describe('Orion tests', () => {
+
 	test('getting and setting api url', () => {
 		Orion.setApiUrl('https://example.com/api/');
 
@@ -12,4 +13,5 @@ describe('Orion tests', () => {
 
 		expect(Orion.getApiUrl()).toBe('https://example.com/api/');
 	});
+
 });

@@ -1,5 +1,5 @@
 import QueryBuilder from "../../../../../src/drivers/default/builders/queryBuilder";
-import Post from '../../../../mocks/models/post';
+import Post from '../../../../stubs/models/post';
 import makeServer from "../server";
 import {FilterOperator} from "../../../../../src/drivers/default/enums/filterOperator";
 import {FilterType} from "../../../../../src/drivers/default/enums/filterType";

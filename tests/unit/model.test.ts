@@ -1,5 +1,5 @@
 import Orion from "../../src/orion";
-import Post from "../mocks/models/post";
+import Post from "../stubs/models/post";
 
 Orion.setApiUrl('https://example.com/api');
 
