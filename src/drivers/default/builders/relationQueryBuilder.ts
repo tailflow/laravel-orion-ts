@@ -17,6 +17,6 @@ export default class RelationQueryBuilder<
 		super(relationConstructor);
 
 		this.modelConstructor = relationConstructor;
-		this.baseUrl = UrlBuilder.getResourceUrl(parent);
+		this.baseUrl = UrlBuilder.getRelationResourceUrl(parent, relationConstructor);
 	}
 }

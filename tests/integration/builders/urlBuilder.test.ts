@@ -1,6 +1,7 @@
 import UrlBuilder from "../../../src/builders/urlBuilder";
 import Post from "../../stubs/models/post";
 import Orion from "../../../src/orion";
+import User from "../../stubs/models/user";
 
 describe('UriBuilder tests', () => {
 
@@ -23,5 +24,18 @@ describe('UriBuilder tests', () => {
 		}));
 
 		expect(resourceUrl).toBe('https://example.com/api/posts/1');
+	});
+
+	test('building relation resource url', () => {
+		Orion.setApiUrl('https://example.com/api');
+
+		const resourceUrl = UrlBuilder.getRelationResourceUrl(new User({
+			id: 1,
+			name: 'New User',
+			created_at: null,
+			updated_at: null
+		}), Post);
+
+		expect(resourceUrl).toBe('https://example.com/api/users/1/posts');
 	});
 });

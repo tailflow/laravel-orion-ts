@@ -24,4 +24,19 @@ export default class UrlBuilder {
 			) + `/${model.getKey()}`
 		);
 	}
+
+	public static getRelationResourceUrl<
+		ParentAttributes,
+		ParentPersistedAttributes,
+		RelationAttributes,
+		RelationPersistedAttributes,
+		R extends Model<RelationAttributes, RelationPersistedAttributes>
+	>(
+		parent: Model<ParentAttributes, ParentPersistedAttributes>,
+		relationConstructor: ModelConstructor<R, RelationAttributes, RelationPersistedAttributes>
+	): string {
+		return (
+			UrlBuilder.getResourceUrl(parent) + '/' + relationConstructor.prototype.getResourceName()
+		);
+	}
 }

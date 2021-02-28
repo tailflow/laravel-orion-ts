@@ -14,6 +14,7 @@ export default function makeServer() {
 
 		models: {
 			post: MirageModel,
+			user: MirageModel
 		},
 
 		routes() {
@@ -60,6 +61,21 @@ export default function makeServer() {
 				const post = schema.posts.find(id);
 
 				return post.update({deleted_at: null});
+			});
+
+			this.post("/users/:id/posts/associate", (schema: any, request) => {
+				const userId = request.params.id;
+				const postId = JSON.parse(request.requestBody).related_key;
+				const post = schema.posts.find(postId);
+
+				return post.update({user_id: userId});
+			});
+
+			this.delete("/users/:user_id/posts/:post_id/dissociate", (schema: any, request) => {
+				const postId = request.params.post_id;
+				const post = schema.posts.find(postId);
+
+				return post.update({user_id: null});
 			});
 		},
 	});

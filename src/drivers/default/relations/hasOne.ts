@@ -1,6 +1,6 @@
-import Model from '../model';
-import { DefaultPersistedAttributes } from '../types/defaultPersistedAttributes';
-import RelationQueryBuilder from '../drivers/default/builders/relationQueryBuilder';
+import Model from '../../../model';
+import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
+import RelationQueryBuilder from '../builders/relationQueryBuilder';
 
 export default class HasOne<
 	Relation extends Model<Attributes, PersistedAttributes>,
