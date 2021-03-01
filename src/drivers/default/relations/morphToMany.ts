@@ -1,9 +1,10 @@
 import Model from '../../../model';
 import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
-import RelationQueryBuilder from '../builders/relationQueryBuilder';
+import BelongsToMany from './belongsToMany';
+import { InferModelAttributesType } from '../../../types/inferModelAttributesType';
 
 export default class MorphToMany<
 	Relation extends Model<Attributes, PersistedAttributes>,
-	Attributes,
+	Attributes = InferModelAttributesType<Relation>,
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>
-> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {}
+> extends BelongsToMany<Relation, Attributes, PersistedAttributes> {}

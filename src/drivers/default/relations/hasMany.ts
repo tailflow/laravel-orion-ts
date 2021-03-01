@@ -2,10 +2,11 @@ import Model from '../../../model';
 import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
 import RelationQueryBuilder from '../builders/relationQueryBuilder';
 import { HttpMethod } from '../enums/httpMethod';
+import { InferModelAttributesType } from '../../../types/inferModelAttributesType';
 
 export default class HasMany<
 	Relation extends Model<Attributes, PersistedAttributes>,
-	Attributes,
+	Attributes = InferModelAttributesType<Relation>,
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>
 > extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {
 	public async associate(key: string | number): Promise<Relation> {

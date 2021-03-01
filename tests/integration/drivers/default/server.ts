@@ -17,7 +17,7 @@ export default function makeServer() {
 			user: MirageModel
 		},
 
-		routes() {
+		routes: function () {
 			this.urlPrefix = 'https://api-mock.test';
 			this.namespace = "api";
 
@@ -76,6 +76,24 @@ export default function makeServer() {
 				const post = schema.posts.find(postId);
 
 				return post.update({user_id: null});
+			});
+
+			this.post("/posts/:id/tags/attach", (schema: any, request) => {
+				const postId = request.params.id;
+				const tagIds = JSON.parse(request.requestBody).resources;
+
+				return {
+					attached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds)
+				}
+			});
+
+			this.delete("/posts/:id/tags/detach", (schema: any, request) => {
+				const postId = request.params.id;
+				const tagIds = JSON.parse(request.requestBody).resources;
+
+				return {
+					detached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds)
+				}
 			});
 		},
 	});
