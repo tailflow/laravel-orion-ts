@@ -79,7 +79,6 @@ export default function makeServer() {
 			});
 
 			this.post("/posts/:id/tags/attach", (schema: any, request) => {
-				const postId = request.params.id;
 				const tagIds = JSON.parse(request.requestBody).resources;
 
 				return {
@@ -88,11 +87,35 @@ export default function makeServer() {
 			});
 
 			this.delete("/posts/:id/tags/detach", (schema: any, request) => {
-				const postId = request.params.id;
 				const tagIds = JSON.parse(request.requestBody).resources;
 
 				return {
 					detached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds)
+				}
+			});
+
+			this.patch("/posts/:id/tags/sync", (schema: any, request) => {
+				const tagIds = JSON.parse(request.requestBody).resources;
+
+				return {
+					attached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds),
+					updated: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds),
+					detached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds),
+				}
+			});
+
+			this.patch("/posts/:id/tags/toggle", (schema: any, request) => {
+				const tagIds = JSON.parse(request.requestBody).resources;
+
+				return {
+					attached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds),
+					detached: Array.isArray(tagIds) ? tagIds : Object.keys(tagIds),
+				}
+			});
+
+			this.patch("/posts/:post_id/tags/:tag_id/pivot", (schema: any, request) => {
+				return {
+					updated: [request.params.tag_id]
 				}
 			});
 		},
