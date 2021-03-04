@@ -24,12 +24,16 @@ describe('BelongsToMany tests', () => {
 		content: string
 	};
 
+	type TagPivot = {
+		example_pivot_field: string
+	};
+
 	test('attaching resources', async () => {
 		const postEntity = server.schema.posts.create({title: 'Test Post'});
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const attachResult = await belongsToManyRelation.attach([2, 5, 7]);
 
 		expect(attachResult).toBeInstanceOf(AttachResult);
@@ -44,7 +48,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		await belongsToManyRelation.attach([2, 5, 7], true);
 
 		const requests = server.pretender.handledRequests;
@@ -56,7 +60,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const attachResult = await belongsToManyRelation.attachWithFields({
 			2: {
 				example_pivot_field: 'value A'
@@ -78,7 +82,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		await belongsToManyRelation.attachWithFields({
 			2: {
 				example_pivot_field: 'value A'
@@ -97,7 +101,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const detachResult = await belongsToManyRelation.detach([2, 5, 7]);
 
 		expect(detachResult).toBeInstanceOf(DetachResult);
@@ -109,7 +113,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const detachResult = await belongsToManyRelation.detachWithFields({
 			2: {
 				example_pivot_field: 'value A'
@@ -128,7 +132,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const syncResult = await belongsToManyRelation.sync([2, 5, 7]);
 
 		expect(syncResult).toBeInstanceOf(SyncResult);
@@ -145,7 +149,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		await belongsToManyRelation.sync([2, 5, 7], false);
 
 		const requests = server.pretender.handledRequests;
@@ -157,7 +161,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const syncResult = await belongsToManyRelation.syncWithFields({
 			2: {
 				example_pivot_field: 'value A'
@@ -181,7 +185,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		await belongsToManyRelation.syncWithFields({
 			2: {
 				example_pivot_field: 'value A'
@@ -200,7 +204,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const toggleResult = await belongsToManyRelation.toggle([2, 5, 7]);
 
 		expect(toggleResult).toBeInstanceOf(ToggleResult);
@@ -213,7 +217,7 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const toggleResult = await belongsToManyRelation.toggleWithFields({
 			2: {
 				example_pivot_field: 'value A'
@@ -233,8 +237,8 @@ describe('BelongsToMany tests', () => {
 
 		const post = new Post(postEntity.attrs);
 
-		const belongsToManyRelation = new BelongsToMany<Tag, TagAttributes>(Tag, post);
-		const updatePivotResult = await belongsToManyRelation.updatePivot(5, {field: 'value'});
+		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
+		const updatePivotResult = await belongsToManyRelation.updatePivot(5, {example_pivot_field : 'value'});
 
 		expect(updatePivotResult).toBeInstanceOf(UpdatePivotResult);
 		expect(updatePivotResult.updated).toStrictEqual(['5']);

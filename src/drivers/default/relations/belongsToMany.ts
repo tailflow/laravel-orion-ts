@@ -11,6 +11,7 @@ import UpdatePivotResult from '../results/updatePivotResult';
 
 export default class BelongsToMany<
 	Relation extends Model<Attributes, PersistedAttributes>,
+	Pivot = {},
 	Attributes = InferModelAttributesType<Relation>,
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>
 > extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {
@@ -31,7 +32,7 @@ export default class BelongsToMany<
 	}
 
 	public async attachWithFields(
-		resources: Record<string, any>,
+		resources: Record<string, Pivot>,
 		duplicates: boolean = false
 	): Promise<AttachResult> {
 		const response = await this.request(`attach`, HttpMethod.POST, { duplicates }, { resources });
@@ -47,7 +48,7 @@ export default class BelongsToMany<
 		return new DetachResult(response.data.detached);
 	}
 
-	public async detachWithFields(resources: Record<string, any>): Promise<DetachResult> {
+	public async detachWithFields(resources: Record<string, Pivot>): Promise<DetachResult> {
 		const response = await this.request(`detach`, HttpMethod.DELETE, null, { resources });
 
 		return new DetachResult(response.data.detached);
@@ -67,7 +68,7 @@ export default class BelongsToMany<
 	}
 
 	public async syncWithFields(
-		resources: Record<string, any>,
+		resources: Record<string, Pivot>,
 		detaching: boolean = true
 	): Promise<SyncResult> {
 		const response = await this.request(`sync`, HttpMethod.PATCH, { detaching }, { resources });
@@ -83,13 +84,13 @@ export default class BelongsToMany<
 		return new ToggleResult(response.data.attached, response.data.detached);
 	}
 
-	public async toggleWithFields(resources: Record<string, any>): Promise<ToggleResult> {
+	public async toggleWithFields(resources: Record<string, Pivot>): Promise<ToggleResult> {
 		const response = await this.request(`toggle`, HttpMethod.PATCH, null, { resources });
 
 		return new ToggleResult(response.data.attached, response.data.detached);
 	}
 
-	public async updatePivot(key: number | string, pivot: any): Promise<UpdatePivotResult> {
+	public async updatePivot(key: number | string, pivot: Pivot): Promise<UpdatePivotResult> {
 		const response = await this.request(`${key}/pivot`, HttpMethod.PATCH, null, { pivot });
 
 		return new UpdatePivotResult(response.data.updated);

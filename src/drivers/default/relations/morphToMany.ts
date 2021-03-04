@@ -5,6 +5,7 @@ import { InferModelAttributesType } from '../../../types/inferModelAttributesTyp
 
 export default class MorphToMany<
 	Relation extends Model<Attributes, PersistedAttributes>,
+	Pivot = {},
 	Attributes = InferModelAttributesType<Relation>,
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>
-> extends BelongsToMany<Relation, Attributes, PersistedAttributes> {}
+> extends BelongsToMany<Relation, Pivot, Attributes, PersistedAttributes> {}
