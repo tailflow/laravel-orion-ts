@@ -4,6 +4,7 @@ import makeServer from "../server";
 import {FilterOperator} from "../../../../../src/drivers/default/enums/filterOperator";
 import {FilterType} from "../../../../../src/drivers/default/enums/filterType";
 import {SortDirection} from "../../../../../src/drivers/default/enums/sortDirection";
+import User from "../../../../stubs/models/user";
 
 let server: any;
 
@@ -58,8 +59,6 @@ describe('QueryBuilder tests', () => {
 	});
 
 	test('retrieving a paginated list resources with included relations', async () => {
-		// TODO: test parsed relations
-
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		await queryBuilder.with(['user', 'profile']).get();
 
@@ -298,6 +297,37 @@ describe('QueryBuilder tests', () => {
 
 		const requests = server.pretender.handledRequests;
 		expect(requests[0].queryParams).toStrictEqual({force: 'true'});
+	});
+
+	test('hydrating model with attributes and relations', async () => {
+		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
+		const post = queryBuilder.hydrate({
+			id: 1,
+			title: 'test',
+			updated_at: '2021-02-01',
+			created_at: '2021-02-01',
+			user: {
+				id: 1,
+				name: 'Test User',
+				updated_at: '2021-02-01',
+				created_at: '2021-02-01'
+			} as unknown as User
+		});
+
+		expect(post).toBeInstanceOf(Post);
+		expect(post.$attributes).toStrictEqual({
+			id: 1,
+			title: 'test',
+			updated_at: '2021-02-01',
+			created_at: '2021-02-01',
+		});
+		expect(post.$relations.user).toBeInstanceOf(User);
+		expect(post.$relations.user.$attributes).toStrictEqual({
+			id: 1,
+			name: 'Test User',
+			updated_at: '2021-02-01',
+			created_at: '2021-02-01'
+		});
 	});
 
 });

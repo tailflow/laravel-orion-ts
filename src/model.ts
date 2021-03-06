@@ -5,14 +5,15 @@ import ModelConstructor from './contracts/modelConstructor';
 import { AxiosResponse } from 'axios';
 import { DefaultPersistedAttributes } from './types/defaultPersistedAttributes';
 
-export default class Model<
+export default abstract class Model<
 	Attributes = {},
 	Relations = {},
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>
 > {
 	public $attributes!: PersistedAttributes;
 	public $relations!: Relations;
-	public $response!: AxiosResponse;
+
+	public $response?: AxiosResponse;
 
 	constructor(attributes?: PersistedAttributes, relations?: Relations) {
 		this.$init();

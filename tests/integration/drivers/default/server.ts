@@ -1,6 +1,7 @@
-import {createServer, Model as MirageModel} from "miragejs";
+import {belongsTo, createServer, hasMany, Model as MirageModel} from "miragejs";
 import Orion from "../../../../src/orion";
 import {LaravelSerializer} from './serializer';
+import Schema from "miragejs/orm/schema";
 
 export default function makeServer() {
 	return createServer({
@@ -13,8 +14,12 @@ export default function makeServer() {
 		},
 
 		models: {
-			post: MirageModel,
-			user: MirageModel
+			post: MirageModel.extend({
+				user: belongsTo('user')
+			}),
+			user: MirageModel.extend({
+				posts: hasMany('posts')
+			})
 		},
 
 		routes: function () {

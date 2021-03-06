@@ -51,7 +51,7 @@ export default class QueryBuilder<
 			this.prepareQueryParams({ limit, page })
 		);
 
-		return response.data.data.map((attributes: PersistedAttributes) => {
+		return response.data.data.map((attributes: PersistedAttributes & Relations) => {
 			return this.hydrate(attributes, response);
 		});
 	}
@@ -69,7 +69,7 @@ export default class QueryBuilder<
 			}
 		);
 
-		return response.data.data.map((attributes: PersistedAttributes) => {
+		return response.data.data.map((attributes: PersistedAttributes & Relations) => {
 			return this.hydrate(attributes, response);
 		});
 	}
@@ -159,12 +159,30 @@ export default class QueryBuilder<
 		return this;
 	}
 
-	protected async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
+	public async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
 		return axios.request({ baseURL: this.baseUrl, url, method, params, data });
 	}
 
-	protected hydrate(attributes: PersistedAttributes, response: AxiosResponse): M {
-		const model = new this.modelConstructor(attributes);
+	public hydrate(raw: PersistedAttributes & Relations, response?: AxiosResponse): M {
+		const model = new this.modelConstructor();
+
+		for (const field of Object.keys(raw)) {
+			const rawValue = raw[field];
+
+			if (typeof model[field] === 'function') {
+				const relationQueryBuilder: QueryBuilder<Model> = model[field]();
+
+				if (Array.isArray(rawValue)) {
+					model.$relations[field] = rawValue.map((rawRelation: any) => {
+						return relationQueryBuilder.hydrate(rawRelation, response);
+					});
+				} else {
+					model.$relations[field] = relationQueryBuilder.hydrate(rawValue, response);
+				}
+			} else {
+				model.$attributes[field] = rawValue;
+			}
+		}
 
 		model.$response = response;
 
