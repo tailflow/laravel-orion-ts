@@ -22,9 +22,14 @@ export default class UrlBuilder {
 		);
 	}
 
-	public static getRelationResourceUrl<R extends Model>(
+	public static getRelationResourceUrl<
+		R extends Model,
+		Attributes = ExtractModelAttributesType<R>,
+		PersistedAttributes = ExtractModelPersistedAttributesType<R>,
+		Relations = ExtractModelRelationsType<R>
+	>(
 		parent: Model,
-		relationConstructor: ModelConstructor<R>
+		relationConstructor: ModelConstructor<R, Attributes, PersistedAttributes, Relations>
 	): string {
 		return (
 			UrlBuilder.getResourceUrl(parent) +
