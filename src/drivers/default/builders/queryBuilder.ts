@@ -12,6 +12,7 @@ import UrlBuilder from '../../../builders/urlBuilder';
 import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
 import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
 import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
+import Orion from '../../../orion';
 
 export default class QueryBuilder<
 	M extends Model,
@@ -160,7 +161,12 @@ export default class QueryBuilder<
 	}
 
 	public async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
-		return axios.request({ baseURL: this.baseUrl, url, method, params, data });
+		let headers = {};
+		if (Orion.getToken()) {
+			headers['Authorization'] = `Bearer ${Orion.getToken()}`;
+		}
+
+		return axios.request({ baseURL: this.baseUrl, url, method, params, data, headers });
 	}
 
 	public hydrate(raw: PersistedAttributes & Relations, response?: AxiosResponse): M {
