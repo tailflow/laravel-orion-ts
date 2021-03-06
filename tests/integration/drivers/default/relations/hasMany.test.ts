@@ -29,7 +29,7 @@ describe('HasMany tests', () => {
 		const associatedPost = await hasManyRelation.associate(postEntity.attrs.id);
 
 		expect(associatedPost).toBeInstanceOf(Post);
-		expect(associatedPost.attributes).toStrictEqual({id: '1', title: 'Test Post', user_id: '1'});
+		expect(associatedPost.$attributes).toStrictEqual({id: '1', title: 'Test Post', user_id: '1'});
 		expect(server.schema.posts.find('1').attrs.user_id).toBe('1');
 	});
 
@@ -56,7 +56,7 @@ describe('HasMany tests', () => {
 		const associatedPost = await hasManyRelation.dissociate(postEntity.attrs.id);
 
 		expect(associatedPost).toBeInstanceOf(Post);
-		expect(associatedPost.attributes).toStrictEqual({id: '1', title: 'Test Post', user_id: null});
+		expect(associatedPost.$attributes).toStrictEqual({id: '1', title: 'Test Post', user_id: null});
 		expect(server.schema.posts.find('1').attrs.user_id).toBeNull();
 	});
 
