@@ -1,10 +1,11 @@
 import Model from '../model';
-import { DefaultPersistedAttributes } from '../types/defaultPersistedAttributes';
+import { ExtractModelAttributesType } from '../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../types/extractPersistedModelAttributesType';
 
 export default interface ModelConstructor<
-	M extends Model<Attributes, PersistedAttributes>,
-	Attributes,
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+	M extends Model,
+	Attributes = ExtractModelAttributesType<M>,
+	PersistedAttributes = ExtractModelPersistedAttributesType<M>
 > {
 	new (attributes?: PersistedAttributes): M;
 }

@@ -1,10 +1,10 @@
 import Model from '../../../model';
-import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
 import RelationQueryBuilder from '../builders/relationQueryBuilder';
-import { InferModelAttributesType } from '../../../types/inferModelAttributesType';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
 
 export default class HasOneThrough<
-	Relation extends Model<Attributes, PersistedAttributes>,
-	Attributes = InferModelAttributesType<Relation>,
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+	Relation extends Model,
+	Attributes = ExtractModelAttributesType<Relation>,
+	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>
 > extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {}

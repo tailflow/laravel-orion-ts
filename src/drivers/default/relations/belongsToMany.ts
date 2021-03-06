@@ -1,19 +1,19 @@
 import Model from '../../../model';
-import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
 import RelationQueryBuilder from '../builders/relationQueryBuilder';
 import { HttpMethod } from '../enums/httpMethod';
 import AttachResult from '../results/attachResult';
-import { InferModelAttributesType } from '../../../types/inferModelAttributesType';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
 import DetachResult from '../results/detachResult';
 import SyncResult from '../results/syncResult';
 import ToggleResult from '../results/toggleResult';
 import UpdatePivotResult from '../results/updatePivotResult';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
 
 export default class BelongsToMany<
-	Relation extends Model<Attributes, PersistedAttributes>,
+	Relation extends Model,
 	Pivot = {},
-	Attributes = InferModelAttributesType<Relation>,
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+	Attributes = ExtractModelAttributesType<Relation>,
+	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>
 > extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {
 	public async attach(
 		keys: Array<number | string>,

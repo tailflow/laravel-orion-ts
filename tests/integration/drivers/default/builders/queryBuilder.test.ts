@@ -32,8 +32,8 @@ describe('QueryBuilder tests', () => {
 			expect(result).toBeInstanceOf(Post);
 		});
 
-		expect(results[0].attributes).toStrictEqual({id: '1', title: 'Test Post A'});
-		expect(results[1].attributes).toStrictEqual({id: '2', title: 'Test Post B'});
+		expect(results[0].$attributes).toStrictEqual({id: '1', title: 'Test Post A'});
+		expect(results[1].$attributes).toStrictEqual({id: '2', title: 'Test Post B'});
 
 		expect(results.length).toBe(2);
 
@@ -87,8 +87,8 @@ describe('QueryBuilder tests', () => {
 			expect(result).toBeInstanceOf(Post);
 		});
 
-		expect(results[0].attributes).toStrictEqual({id: '1', title: 'Test Post A'});
-		expect(results[1].attributes).toStrictEqual({id: '2', title: 'Test Post B'});
+		expect(results[0].$attributes).toStrictEqual({id: '1', title: 'Test Post A'});
+		expect(results[1].$attributes).toStrictEqual({id: '2', title: 'Test Post B'});
 
 		const requests = server.pretender.handledRequests;
 		const searchParameters = {
@@ -140,7 +140,7 @@ describe('QueryBuilder tests', () => {
 		});
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Test Post');
 	});
 
@@ -151,7 +151,7 @@ describe('QueryBuilder tests', () => {
 		});
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Test Post');
 
 		const requests = server.pretender.handledRequests;
@@ -165,7 +165,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.find('1');
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post'});
 	});
 
 	test('retrieving a soft deleted resource', async () => {
@@ -185,7 +185,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.with(['user', 'profile']).find('1');
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post'});
 
 		const requests = server.pretender.handledRequests;
 		expect(requests[0].queryParams).toStrictEqual({include: 'user,profile'});
@@ -200,7 +200,7 @@ describe('QueryBuilder tests', () => {
 		});
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Updated Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Updated Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 	});
 
@@ -213,7 +213,7 @@ describe('QueryBuilder tests', () => {
 		});
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Updated Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Updated Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 
 		const requests = server.pretender.handledRequests;
@@ -229,7 +229,7 @@ describe('QueryBuilder tests', () => {
 		});
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Updated Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Updated Post'});
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 
 		const requests = server.pretender.handledRequests;
@@ -243,7 +243,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.destroy('1');
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: '2021-01-01'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: '2021-01-01'});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
 	});
 
@@ -254,7 +254,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.with(['user', 'profile']).destroy('1');
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: '2021-01-01'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: '2021-01-01'});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
 
 		const requests = server.pretender.handledRequests;
@@ -268,7 +268,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.restore('1');
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: null});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: null});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeNull();
 	});
 
@@ -279,7 +279,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.with(['user', 'profile']).restore('1');
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: null});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post', deleted_at: null});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeNull();
 
 		const requests = server.pretender.handledRequests;
@@ -293,7 +293,7 @@ describe('QueryBuilder tests', () => {
 		const post = await queryBuilder.destroy('1', true);
 
 		expect(post).toBeInstanceOf(Post);
-		expect(post.attributes).toStrictEqual({id: '1', title: 'Test Post'});
+		expect(post.$attributes).toStrictEqual({id: '1', title: 'Test Post'});
 		expect(server.schema.posts.find('1')).toBeNull();
 
 		const requests = server.pretender.handledRequests;

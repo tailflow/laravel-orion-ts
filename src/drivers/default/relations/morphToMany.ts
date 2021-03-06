@@ -1,11 +1,12 @@
 import Model from '../../../model';
 import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
 import BelongsToMany from './belongsToMany';
-import { InferModelAttributesType } from '../../../types/inferModelAttributesType';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
 
 export default class MorphToMany<
-	Relation extends Model<Attributes, PersistedAttributes>,
+	Relation extends Model,
 	Pivot = {},
-	Attributes = InferModelAttributesType<Relation>,
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+	Attributes = ExtractModelAttributesType<Relation>,
+	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>
 > extends BelongsToMany<Relation, Pivot, Attributes, PersistedAttributes> {}

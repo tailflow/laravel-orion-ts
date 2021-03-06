@@ -1,13 +1,13 @@
 import Model from '../../../model';
-import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
 import RelationQueryBuilder from '../builders/relationQueryBuilder';
 import { HttpMethod } from '../enums/httpMethod';
-import { InferModelAttributesType } from '../../../types/inferModelAttributesType';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
 
 export default class HasMany<
-	Relation extends Model<Attributes, PersistedAttributes>,
-	Attributes = InferModelAttributesType<Relation>,
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+	Relation extends Model,
+	Attributes = ExtractModelAttributesType<Relation>,
+	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>
 > extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {
 	public async associate(key: string | number): Promise<Relation> {
 		const response = await this.request(`associate`, HttpMethod.POST, this.prepareQueryParams(), {

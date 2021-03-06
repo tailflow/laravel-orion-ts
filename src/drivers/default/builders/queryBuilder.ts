@@ -9,12 +9,13 @@ import { FilterType } from '../enums/filterType';
 import Sorter from '../sorter';
 import { SortDirection } from '../enums/sortDirection';
 import UrlBuilder from '../../../builders/urlBuilder';
-import { DefaultPersistedAttributes } from '../../../types/defaultPersistedAttributes';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
 
 export default class QueryBuilder<
-	M extends Model<Attributes, PersistedAttributes>,
-	Attributes,
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
+	M extends Model,
+	Attributes = ExtractModelAttributesType<M>,
+	PersistedAttributes = ExtractModelPersistedAttributesType<M>
 > {
 	protected baseUrl: string;
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes>;
