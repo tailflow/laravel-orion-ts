@@ -12,38 +12,24 @@ export default class UrlBuilder {
 		PersistedAttributes = ExtractModelPersistedAttributesType<M>,
 		Relations = ExtractModelRelationsType<M>
 	>(model: ModelConstructor<M, Attributes, PersistedAttributes, Relations>): string {
-		return Orion.getApiUrl() + model.prototype.$getResourceName();
+		return Orion.getApiUrl() + (model.prototype as M).$getResourceName();
 	}
 
-	public static getResourceUrl<Attributes, Relations, PersistedAttributes>(
-		model: Model<Attributes, Relations, PersistedAttributes>
-	): string {
+	public static getResourceUrl<M extends Model>(model: Model): string {
 		return (
-			UrlBuilder.getResourceBaseUrl(
-				model.constructor as ModelConstructor<Model, Attributes, PersistedAttributes>
-			) + `/${model.$getKey()}`
+			UrlBuilder.getResourceBaseUrl(model.constructor as ModelConstructor<M>) +
+			`/${model.$getKey()}`
 		);
 	}
 
-	public static getRelationResourceUrl<
-		ParentAttributes,
-		ParentPersistedAttributes,
-		ParentRelations,
-		RelationAttributes,
-		RelationPersistedAttributes,
-		RelationRelations,
-		R extends Model
-	>(
-		parent: Model<ParentAttributes, ParentRelations, ParentPersistedAttributes>,
-		relationConstructor: ModelConstructor<
-			R,
-			RelationAttributes,
-			RelationPersistedAttributes,
-			RelationRelations
-		>
+	public static getRelationResourceUrl<R extends Model>(
+		parent: Model,
+		relationConstructor: ModelConstructor<R>
 	): string {
 		return (
-			UrlBuilder.getResourceUrl(parent) + '/' + relationConstructor.prototype.$getResourceName()
+			UrlBuilder.getResourceUrl(parent) +
+			'/' +
+			(relationConstructor.prototype as R).$getResourceName()
 		);
 	}
 }

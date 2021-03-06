@@ -1,5 +1,5 @@
 import QueryBuilder from './drivers/default/builders/queryBuilder';
-import * as pluralize from 'pluralize';
+import { plural } from 'pluralize';
 import { noCase, snakeCase } from 'change-case';
 import ModelConstructor from './contracts/modelConstructor';
 import { AxiosResponse } from 'axios';
@@ -19,7 +19,7 @@ export default abstract class Model<
 		this.$init();
 
 		if (attributes) {
-			this.$fill(attributes);
+			this.$setAttributes(attributes);
 		}
 
 		if (relations) {
@@ -49,9 +49,7 @@ export default abstract class Model<
 		return this;
 	}
 
-	public $fill(attributes: PersistedAttributes): this {
-		this.$init();
-
+	public $setAttributes(attributes: PersistedAttributes): this {
 		for (const attribute in attributes) {
 			this.$attributes[attribute] = attributes[attribute];
 		}
@@ -60,8 +58,6 @@ export default abstract class Model<
 	}
 
 	public $setRelations(relations: Relations): this {
-		this.$init();
-
 		for (const relation in relations) {
 			this.$relations[relation] = relations[relation];
 		}
@@ -78,7 +74,7 @@ export default abstract class Model<
 	}
 
 	public $getResourceName(): string {
-		return snakeCase(pluralize.plural(noCase(this.constructor.name)));
+		return snakeCase(plural(noCase(this.constructor.name)));
 	}
 
 	protected $init() {
