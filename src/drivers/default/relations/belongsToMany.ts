@@ -7,14 +7,16 @@ import DetachResult from '../results/detachResult';
 import SyncResult from '../results/syncResult';
 import ToggleResult from '../results/toggleResult';
 import UpdatePivotResult from '../results/updatePivotResult';
-import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
+import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
 
 export default class BelongsToMany<
 	Relation extends Model,
 	Pivot = {},
 	Attributes = ExtractModelAttributesType<Relation>,
-	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>
-> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes> {
+	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
+	Relations = ExtractModelRelationsType<Relation>
+> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations> {
 	public async attach(
 		keys: Array<number | string>,
 		duplicates: boolean = false

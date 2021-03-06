@@ -10,15 +10,17 @@ import Sorter from '../sorter';
 import { SortDirection } from '../enums/sortDirection';
 import UrlBuilder from '../../../builders/urlBuilder';
 import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
-import { ExtractModelPersistedAttributesType } from '../../../types/extractPersistedModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
+import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
 
 export default class QueryBuilder<
 	M extends Model,
 	Attributes = ExtractModelAttributesType<M>,
-	PersistedAttributes = ExtractModelPersistedAttributesType<M>
+	PersistedAttributes = ExtractModelPersistedAttributesType<M>,
+	Relations = ExtractModelRelationsType<M>
 > {
 	protected baseUrl: string;
-	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes>;
+	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations>;
 
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
@@ -30,7 +32,7 @@ export default class QueryBuilder<
 	protected searchValue?: string;
 
 	constructor(
-		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes>,
+		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations>,
 		baseUrl?: string
 	) {
 		if (baseUrl) {

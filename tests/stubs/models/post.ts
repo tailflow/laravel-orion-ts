@@ -4,6 +4,8 @@ import BelongsTo from "../../../src/drivers/default/relations/belongsTo";
 
 export default class Post extends Model<{
 	title: string,
+}, {
+	user: BelongsTo<User>
 }> {
 	public user(): BelongsTo<User> {
 		return new BelongsTo(User, this);

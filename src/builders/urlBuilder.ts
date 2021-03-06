@@ -2,19 +2,21 @@ import Model from '../model';
 import Orion from '../orion';
 import ModelConstructor from '../contracts/modelConstructor';
 import { ExtractModelAttributesType } from '../types/extractModelAttributesType';
-import { ExtractModelPersistedAttributesType } from '../types/extractPersistedModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../types/extractModelPersistedAttributesType';
+import { ExtractModelRelationsType } from '../types/extractModelRelationsType';
 
 export default class UrlBuilder {
 	public static getResourceBaseUrl<
 		M extends Model,
 		Attributes = ExtractModelAttributesType<M>,
-		PersistedAttributes = ExtractModelPersistedAttributesType<M>
-	>(model: ModelConstructor<M, Attributes, PersistedAttributes>): string {
+		PersistedAttributes = ExtractModelPersistedAttributesType<M>,
+		Relations = ExtractModelRelationsType<M>
+	>(model: ModelConstructor<M, Attributes, PersistedAttributes, Relations>): string {
 		return Orion.getApiUrl() + model.prototype.$getResourceName();
 	}
 
-	public static getResourceUrl<Attributes, PersistedAttributes>(
-		model: Model<Attributes, PersistedAttributes>
+	public static getResourceUrl<Attributes, Relations, PersistedAttributes>(
+		model: Model<Attributes, Relations, PersistedAttributes>
 	): string {
 		return (
 			UrlBuilder.getResourceBaseUrl(
@@ -26,12 +28,19 @@ export default class UrlBuilder {
 	public static getRelationResourceUrl<
 		ParentAttributes,
 		ParentPersistedAttributes,
+		ParentRelations,
 		RelationAttributes,
 		RelationPersistedAttributes,
+		RelationRelations,
 		R extends Model
 	>(
-		parent: Model<ParentAttributes, ParentPersistedAttributes>,
-		relationConstructor: ModelConstructor<R, RelationAttributes, RelationPersistedAttributes>
+		parent: Model<ParentAttributes, ParentRelations, ParentPersistedAttributes>,
+		relationConstructor: ModelConstructor<
+			R,
+			RelationAttributes,
+			RelationPersistedAttributes,
+			RelationRelations
+		>
 	): string {
 		return (
 			UrlBuilder.getResourceUrl(parent) + '/' + relationConstructor.prototype.$getResourceName()

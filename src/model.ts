@@ -7,15 +7,22 @@ import { DefaultPersistedAttributes } from './types/defaultPersistedAttributes';
 
 export default class Model<
 	Attributes = {},
+	Relations = {},
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>
 > {
 	public $attributes!: PersistedAttributes;
+	public $relations!: Relations;
 	public $response!: AxiosResponse;
 
-	constructor(attributes?: PersistedAttributes) {
-		this.$initAttributesIfUndefined();
+	constructor(attributes?: PersistedAttributes, relations?: Relations) {
+		this.$init();
+
 		if (attributes) {
 			this.$fill(attributes);
+		}
+
+		if (relations) {
+			this.$setRelations(this.$relations);
 		}
 	}
 
@@ -42,10 +49,20 @@ export default class Model<
 	}
 
 	public $fill(attributes: PersistedAttributes): this {
-		this.$initAttributesIfUndefined();
+		this.$init();
 
 		for (const attribute in attributes) {
 			this.$attributes[attribute] = attributes[attribute];
+		}
+
+		return this;
+	}
+
+	public $setRelations(relations: Relations): this {
+		this.$init();
+
+		for (const relation in relations) {
+			this.$relations[relation] = relations[relation];
 		}
 
 		return this;
@@ -55,7 +72,7 @@ export default class Model<
 		return new QueryBuilder<M>(this);
 	}
 
-	public $is(model: Model<Attributes, PersistedAttributes>): boolean {
+	public $is(model: Model<Attributes, Relations, PersistedAttributes>): boolean {
 		return this.$getKey() === model.$getKey();
 	}
 
@@ -63,9 +80,13 @@ export default class Model<
 		return snakeCase(pluralize.plural(noCase(this.constructor.name)));
 	}
 
-	protected $initAttributesIfUndefined() {
+	protected $init() {
 		if (!this.$attributes) {
 			this.$attributes = {} as PersistedAttributes;
+		}
+
+		if (!this.$relations) {
+			this.$relations = {} as Relations;
 		}
 	}
 }
