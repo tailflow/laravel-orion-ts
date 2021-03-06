@@ -1,12 +1,14 @@
 export default class Orion {
 	protected static apiUrl: string;
 	protected static token: string | null = null;
+	protected static useCredentials: boolean = false;
 
-	public static init(apiUrl: string, token?: string): void {
+	public static init(apiUrl: string, token?: string, withCredentials: boolean = false): void {
 		Orion.setApiUrl(apiUrl);
 		if (token) {
 			Orion.setToken(token);
 		}
+		this.useCredentials = withCredentials;
 	}
 
 	public static setApiUrl(apiUrl: string): Orion {
@@ -30,5 +32,19 @@ export default class Orion {
 
 	public static getToken(): string | null {
 		return Orion.token;
+	}
+
+	public static withCredentials(): Orion {
+		Orion.useCredentials = true;
+		return Orion;
+	}
+
+	public static withoutCredentials(): Orion {
+		Orion.useCredentials = false;
+		return Orion;
+	}
+
+	public static usesCredentials(): boolean {
+		return Orion.useCredentials;
 	}
 }

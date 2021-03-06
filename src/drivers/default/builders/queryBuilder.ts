@@ -166,7 +166,15 @@ export default class QueryBuilder<
 			headers['Authorization'] = `Bearer ${Orion.getToken()}`;
 		}
 
-		return axios.request({ baseURL: this.baseUrl, url, method, params, data, headers });
+		return axios.request({
+			baseURL: this.baseUrl,
+			url,
+			method,
+			params,
+			data,
+			headers,
+			withCredentials: Orion.usesCredentials()
+		});
 	}
 
 	public hydrate(raw: PersistedAttributes & Relations, response?: AxiosResponse): M {
