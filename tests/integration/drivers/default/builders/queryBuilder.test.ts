@@ -5,7 +5,6 @@ import {FilterOperator} from "../../../../../src/drivers/default/enums/filterOpe
 import {FilterType} from "../../../../../src/drivers/default/enums/filterType";
 import {SortDirection} from "../../../../../src/drivers/default/enums/sortDirection";
 import User from "../../../../stubs/models/user";
-import Orion from "../../../../../src/orion";
 
 let server: any;
 
@@ -298,18 +297,6 @@ describe('QueryBuilder tests', () => {
 
 		const requests = server.pretender.handledRequests;
 		expect(requests[0].queryParams).toStrictEqual({force: 'true'});
-	});
-
-	test('using bearer token', async () => {
-		server.schema.posts.create({title: 'Test Post'});
-
-		Orion.setToken('test');
-
-		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		await queryBuilder.find(1);
-
-		const requests = server.pretender.handledRequests;
-		expect(requests[0].requestHeaders['Authorization']).toStrictEqual('Bearer test');
 	});
 
 	test('hydrating model with attributes and relations', async () => {

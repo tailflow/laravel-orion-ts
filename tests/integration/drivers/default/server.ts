@@ -1,7 +1,6 @@
 import {belongsTo, createServer, hasMany, Model as MirageModel} from "miragejs";
 import Orion from "../../../../src/orion";
 import {LaravelSerializer} from './serializer';
-import Schema from "miragejs/orm/schema";
 
 export default function makeServer() {
 	return createServer({
@@ -24,22 +23,26 @@ export default function makeServer() {
 
 		routes: function () {
 			this.urlPrefix = 'https://api-mock.test';
-			this.namespace = "api";
+			this.namespace = '';
 
-			this.get("/posts");
+			this.get("/sanctum/csrf-cookie", () => {
+				return [];
+			});
 
-			this.post("/posts", function (schema: any, request) {
+			this.get("/api/posts");
+
+			this.post("/api/posts", function (schema: any, request) {
 				const attrs = JSON.parse(request.requestBody);
 
 				return schema.posts.create(attrs);
 			});
 
-			this.post("/posts/search", function (schema: any, request) {
+			this.post("/api/posts/search", function (schema: any, request) {
 				return schema.posts.all();
 			});
 
-			this.get("/posts/:id");
-			this.patch("/posts/:id", (schema: any, request) => {
+			this.get("/api/posts/:id");
+			this.patch("/api/posts/:id", (schema: any, request) => {
 				const id = request.params.id
 				const attrs = JSON.parse(request.requestBody);
 
@@ -48,7 +51,7 @@ export default function makeServer() {
 				return post.update(attrs)
 			});
 
-			this.del("/posts/:id", (schema: any, request) => {
+			this.del("/api/posts/:id", (schema: any, request) => {
 				const id = request.params.id;
 				const post = schema.posts.find(id);
 
@@ -61,14 +64,14 @@ export default function makeServer() {
 				return post;
 			});
 
-			this.post("/posts/:id/restore", (schema: any, request) => {
+			this.post("/api/posts/:id/restore", (schema: any, request) => {
 				const id = request.params.id;
 				const post = schema.posts.find(id);
 
 				return post.update({deleted_at: null});
 			});
 
-			this.post("/users/:id/posts/associate", (schema: any, request) => {
+			this.post("/api/users/:id/posts/associate", (schema: any, request) => {
 				const userId = request.params.id;
 				const postId = JSON.parse(request.requestBody).related_key;
 				const post = schema.posts.find(postId);
@@ -76,14 +79,14 @@ export default function makeServer() {
 				return post.update({user_id: userId});
 			});
 
-			this.delete("/users/:user_id/posts/:post_id/dissociate", (schema: any, request) => {
+			this.delete("/api/users/:user_id/posts/:post_id/dissociate", (schema: any, request) => {
 				const postId = request.params.post_id;
 				const post = schema.posts.find(postId);
 
 				return post.update({user_id: null});
 			});
 
-			this.post("/posts/:id/tags/attach", (schema: any, request) => {
+			this.post("/api/posts/:id/tags/attach", (schema: any, request) => {
 				const tagIds = JSON.parse(request.requestBody).resources;
 
 				return {
@@ -91,7 +94,7 @@ export default function makeServer() {
 				}
 			});
 
-			this.delete("/posts/:id/tags/detach", (schema: any, request) => {
+			this.delete("/api/posts/:id/tags/detach", (schema: any, request) => {
 				const tagIds = JSON.parse(request.requestBody).resources;
 
 				return {
@@ -99,7 +102,7 @@ export default function makeServer() {
 				}
 			});
 
-			this.patch("/posts/:id/tags/sync", (schema: any, request) => {
+			this.patch("/api/posts/:id/tags/sync", (schema: any, request) => {
 				const tagIds = JSON.parse(request.requestBody).resources;
 
 				return {
@@ -109,7 +112,7 @@ export default function makeServer() {
 				}
 			});
 
-			this.patch("/posts/:id/tags/toggle", (schema: any, request) => {
+			this.patch("/api/posts/:id/tags/toggle", (schema: any, request) => {
 				const tagIds = JSON.parse(request.requestBody).resources;
 
 				return {
@@ -118,7 +121,7 @@ export default function makeServer() {
 				}
 			});
 
-			this.patch("/posts/:post_id/tags/:tag_id/pivot", (schema: any, request) => {
+			this.patch("/api/posts/:post_id/tags/:tag_id/pivot", (schema: any, request) => {
 				return {
 					updated: [request.params.tag_id]
 				}

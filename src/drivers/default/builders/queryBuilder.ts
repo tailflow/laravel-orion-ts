@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from 'axios';
 import { HttpMethod } from '../enums/httpMethod';
 import Model from '../../../model';
 import ModelConstructor from '../../../contracts/modelConstructor';
@@ -12,6 +11,8 @@ import UrlBuilder from '../../../builders/urlBuilder';
 import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
 import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
 import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
+import HttpClient from '../../../httpClient';
+import { AxiosResponse } from 'axios';
 import Orion from '../../../orion';
 
 export default class QueryBuilder<
@@ -22,6 +23,7 @@ export default class QueryBuilder<
 > {
 	protected baseUrl: string;
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations>;
+	protected httpClient: HttpClient;
 
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
@@ -43,10 +45,11 @@ export default class QueryBuilder<
 		}
 
 		this.modelConstructor = modelConstructor;
+		this.httpClient = Orion.makeHttpClient(this.baseUrl);
 	}
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.request(
+		const response = await this.httpClient.request(
 			'/',
 			HttpMethod.GET,
 			this.prepareQueryParams({ limit, page })
@@ -58,7 +61,7 @@ export default class QueryBuilder<
 	}
 
 	public async search(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.request(
+		const response = await this.httpClient.request(
 			'/search',
 			HttpMethod.POST,
 			this.prepareQueryParams({ limit, page }),
@@ -76,13 +79,17 @@ export default class QueryBuilder<
 	}
 
 	public async find(key: string | number): Promise<M> {
-		const response = await this.request(`/${key}`, HttpMethod.GET, this.prepareQueryParams());
+		const response = await this.httpClient.request(
+			`/${key}`,
+			HttpMethod.GET,
+			this.prepareQueryParams()
+		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async store(attributes: Attributes): Promise<M> {
-		const response = await this.request(
+		const response = await this.httpClient.request(
 			'/',
 			HttpMethod.POST,
 			this.prepareQueryParams(),
@@ -93,7 +100,7 @@ export default class QueryBuilder<
 	}
 
 	public async update(key: string | number, attributes: Attributes): Promise<M> {
-		const response = await this.request(
+		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.PATCH,
 			this.prepareQueryParams(),
@@ -104,7 +111,7 @@ export default class QueryBuilder<
 	}
 
 	public async destroy(key: string | number, force: boolean = false): Promise<M> {
-		const response = await this.request(
+		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.DELETE,
 			this.prepareQueryParams({ force })
@@ -114,7 +121,7 @@ export default class QueryBuilder<
 	}
 
 	public async restore(key: string | number): Promise<M> {
-		const response = await this.request(
+		const response = await this.httpClient.request(
 			`/${key}/restore`,
 			HttpMethod.POST,
 			this.prepareQueryParams()
@@ -163,23 +170,6 @@ export default class QueryBuilder<
 		this.searchValue = value;
 
 		return this;
-	}
-
-	public async request(url: string, method: HttpMethod, params: any = {}, data: any = {}) {
-		let headers = {};
-		if (Orion.getToken()) {
-			headers['Authorization'] = `Bearer ${Orion.getToken()}`;
-		}
-
-		return axios.request({
-			baseURL: this.baseUrl,
-			url,
-			method,
-			params,
-			data,
-			headers,
-			withCredentials: Orion.usesCredentials()
-		});
 	}
 
 	public hydrate(raw: PersistedAttributes & Relations, response?: AxiosResponse): M {

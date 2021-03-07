@@ -5,6 +5,7 @@ import UrlBuilder from '../../../builders/urlBuilder';
 import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
 import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
 import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
+import Orion from '../../../orion';
 
 export default class RelationQueryBuilder<
 	Relation extends Model,
@@ -20,5 +21,6 @@ export default class RelationQueryBuilder<
 
 		this.modelConstructor = relationConstructor;
 		this.baseUrl = UrlBuilder.getRelationResourceUrl(parent, relationConstructor);
+		this.httpClient = Orion.makeHttpClient(this.baseUrl);
 	}
 }

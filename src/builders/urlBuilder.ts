@@ -12,7 +12,7 @@ export default class UrlBuilder {
 		PersistedAttributes = ExtractModelPersistedAttributesType<M>,
 		Relations = ExtractModelRelationsType<M>
 	>(model: ModelConstructor<M, Attributes, PersistedAttributes, Relations>): string {
-		return Orion.getApiUrl() + (model.prototype as M).$getResourceName();
+		return Orion.getApiUrl() + '/' + (model.prototype as M).$getResourceName();
 	}
 
 	public static getResourceUrl<M extends Model>(model: Model): string {
