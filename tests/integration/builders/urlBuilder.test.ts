@@ -6,7 +6,7 @@ import User from "../../stubs/models/user";
 describe('UriBuilder tests', () => {
 
 	test('building resource base url', () => {
-		Orion.setApiUrl('https://example.com/api');
+		Orion.setHost('https://example.com/api');
 
 		const resourceBaseUrl = UrlBuilder.getResourceBaseUrl(Post);
 
@@ -14,7 +14,7 @@ describe('UriBuilder tests', () => {
 	});
 
 	test('building resource url', () => {
-		Orion.setApiUrl('https://example.com/api');
+		Orion.setHost('https://example.com/api');
 
 		const resourceUrl = UrlBuilder.getResourceUrl(new Post({
 			id: 1,
@@ -27,7 +27,7 @@ describe('UriBuilder tests', () => {
 	});
 
 	test('building relation resource url', () => {
-		Orion.setApiUrl('https://example.com/api');
+		Orion.setHost('https://example.com/api');
 
 		const resourceUrl = UrlBuilder.getRelationResourceUrl(new User({
 			id: 1,

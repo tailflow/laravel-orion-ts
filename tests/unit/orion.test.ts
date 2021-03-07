@@ -2,8 +2,21 @@ import Orion from "../../src/orion";
 
 describe('Orion tests', () => {
 
-	test('getting and setting api url', () => {
-		Orion.setApiUrl('https://example.com/api/');
+	test('getting and setting host', () => {
+		Orion.setHost('https://example.com/');
+
+		expect(Orion.getHost()).toBe('https://example.com');
+	});
+
+	test('getting and setting prefix', () => {
+		Orion.setPrefix('/api');
+
+		expect(Orion.getPrefix()).toBe('api');
+	});
+
+	test('getting api url', () => {
+		Orion.setHost('https://example.com/');
+		Orion.setPrefix('/api');
 
 		expect(Orion.getApiUrl()).toBe('https://example.com/api/');
 	});
@@ -34,9 +47,9 @@ describe('Orion tests', () => {
 	});
 
 	test('appending slash to the end when getting api url', () => {
-		Orion.setApiUrl('https://example.com/api');
+		Orion.setHost('https://example.com/api');
 
-		expect(Orion.getApiUrl()).toBe('https://example.com/api/');
+		expect(Orion.getHost()).toBe('https://example.com/api/');
 	});
 
 });

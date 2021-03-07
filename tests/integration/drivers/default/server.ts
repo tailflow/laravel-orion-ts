@@ -127,4 +127,4 @@ export default function makeServer() {
 	});
 }
 
-Orion.setApiUrl('https://api-mock.test/api');
+Orion.init('https://api-mock.test');

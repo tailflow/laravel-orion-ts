@@ -12,7 +12,7 @@ export default class HasMany<
 	Relations = ExtractModelRelationsType<Relation>
 > extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations> {
 	public async associate(key: string | number): Promise<Relation> {
-		const response = await this.request(`associate`, HttpMethod.POST, this.prepareQueryParams(), {
+		const response = await this.request(`/associate`, HttpMethod.POST, this.prepareQueryParams(), {
 			related_key: key
 		});
 
@@ -21,7 +21,7 @@ export default class HasMany<
 
 	public async dissociate(key: string | number): Promise<Relation> {
 		const response = await this.request(
-			`${key}/dissociate`,
+			`/${key}/dissociate`,
 			HttpMethod.DELETE,
 			this.prepareQueryParams()
 		);

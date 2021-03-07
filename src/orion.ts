@@ -1,23 +1,43 @@
 export default class Orion {
-	protected static apiUrl: string;
+	protected static host: string;
+	protected static prefix: string;
 	protected static token: string | null = null;
 	protected static useCredentials: boolean = false;
 
-	public static init(apiUrl: string, token?: string, withCredentials: boolean = false): void {
-		Orion.setApiUrl(apiUrl);
+	public static init(
+		host: string,
+		prefix: string = 'api',
+		token?: string,
+		withCredentials: boolean = false
+	): void {
+		Orion.setHost(host);
 		if (token) {
 			Orion.setToken(token);
 		}
+		this.prefix = prefix;
 		this.useCredentials = withCredentials;
 	}
 
-	public static setApiUrl(apiUrl: string): Orion {
-		Orion.apiUrl = apiUrl;
+	public static setHost(apiUrl: string): Orion {
+		Orion.host = apiUrl;
 		return Orion;
 	}
 
+	public static getHost(): string {
+		return Orion.host.endsWith('/') ? Orion.host : `${Orion.host}/`;
+	}
+
+	public static setPrefix(prefix: string): Orion {
+		Orion.prefix = prefix;
+		return Orion;
+	}
+
+	public static getPrefix(): string {
+		return Orion.prefix.startsWith('/') ? Orion.prefix : `${Orion.prefix}/`;
+	}
+
 	public static getApiUrl(): string {
-		return Orion.apiUrl.endsWith('/') ? Orion.apiUrl : `${Orion.apiUrl}/`;
+		return Orion.getHost() + Orion.getPrefix();
 	}
 
 	public static setToken(token: string): Orion {

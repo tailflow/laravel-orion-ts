@@ -1,7 +1,7 @@
 import Orion from "../../src/orion";
 import Post from "../stubs/models/post";
 
-Orion.setApiUrl('https://example.com/api');
+Orion.setHost('https://example.com/api');
 
 describe('Model tests', () => {
 

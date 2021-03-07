@@ -47,7 +47,7 @@ export default class QueryBuilder<
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
 		const response = await this.request(
-			'',
+			'/',
 			HttpMethod.GET,
 			this.prepareQueryParams({ limit, page })
 		);
@@ -76,20 +76,25 @@ export default class QueryBuilder<
 	}
 
 	public async find(key: string | number): Promise<M> {
-		const response = await this.request(`${key}`, HttpMethod.GET, this.prepareQueryParams());
+		const response = await this.request(`/${key}`, HttpMethod.GET, this.prepareQueryParams());
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async store(attributes: Attributes): Promise<M> {
-		const response = await this.request('', HttpMethod.POST, this.prepareQueryParams(), attributes);
+		const response = await this.request(
+			'/',
+			HttpMethod.POST,
+			this.prepareQueryParams(),
+			attributes
+		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async update(key: string | number, attributes: Attributes): Promise<M> {
 		const response = await this.request(
-			`${key}`,
+			`/${key}`,
 			HttpMethod.PATCH,
 			this.prepareQueryParams(),
 			attributes
@@ -100,7 +105,7 @@ export default class QueryBuilder<
 
 	public async destroy(key: string | number, force: boolean = false): Promise<M> {
 		const response = await this.request(
-			`${key}`,
+			`/${key}`,
 			HttpMethod.DELETE,
 			this.prepareQueryParams({ force })
 		);
@@ -110,7 +115,7 @@ export default class QueryBuilder<
 
 	public async restore(key: string | number): Promise<M> {
 		const response = await this.request(
-			`${key}/restore`,
+			`/${key}/restore`,
 			HttpMethod.POST,
 			this.prepareQueryParams()
 		);
