@@ -3,5 +3,6 @@ export default class SyncResult {
 		public attached: Array<number | string>,
 		public updated: Array<number | string>,
 		public detached: Array<number | string>
-	) {}
+	) {
+	}
 }

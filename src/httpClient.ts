@@ -1,11 +1,11 @@
-import { HttpMethod } from './drivers/default/enums/httpMethod';
+import {HttpMethod} from './drivers/default/enums/httpMethod';
 import Orion from './orion';
-import { AuthDriver } from './drivers/default/enums/authDriver';
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import {AuthDriver} from './drivers/default/enums/authDriver';
+import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 
 export default class HttpClient {
-	protected client: AxiosInstance;
 	protected static xsrfTokenFetched: boolean = false;
+	protected client: AxiosInstance;
 
 	constructor(baseUrl: string, config: AxiosRequestConfig) {
 		let clientConfig: AxiosRequestConfig = Object.assign(config, {
@@ -25,7 +25,7 @@ export default class HttpClient {
 			await this.prefetchXSRFToken();
 		}
 
-		return this.client.request({ url, method, params, data });
+		return this.client.request({url, method, params, data});
 	}
 
 	public async prefetchXSRFToken(): Promise<void> {
@@ -34,7 +34,7 @@ export default class HttpClient {
 		}
 
 		await this.client
-			.get(`sanctum/csrf-cookie`, { baseURL: Orion.getHost() })
+			.get(`sanctum/csrf-cookie`, {baseURL: Orion.getHost()})
 			.then(() => {
 				HttpClient.xsrfTokenFetched = true;
 			})

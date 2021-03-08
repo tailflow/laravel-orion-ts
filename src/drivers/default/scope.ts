@@ -1,5 +1,6 @@
 export default class Scope {
-	constructor(protected name: string, protected parameters: Array<any> = []) {}
+	constructor(protected name: string, protected parameters: Array<any> = []) {
+	}
 
 	public getName(): string {
 		return this.name;

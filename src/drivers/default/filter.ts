@@ -1,5 +1,5 @@
-import { FilterOperator } from './enums/filterOperator';
-import { FilterType } from './enums/filterType';
+import {FilterOperator} from './enums/filterOperator';
+import {FilterType} from './enums/filterType';
 
 export default class Filter {
 	constructor(
@@ -7,7 +7,8 @@ export default class Filter {
 		protected operator: FilterOperator,
 		protected value: any,
 		protected type?: FilterType
-	) {}
+	) {
+	}
 
 	public getField(): string {
 		return this.field;

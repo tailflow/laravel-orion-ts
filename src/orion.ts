@@ -1,6 +1,6 @@
-import { AuthDriver } from './drivers/default/enums/authDriver';
+import {AuthDriver} from './drivers/default/enums/authDriver';
 import HttpClient from './httpClient';
-import { AxiosRequestConfig } from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
 export default class Orion {
 	protected static host: string;
@@ -75,6 +75,19 @@ export default class Orion {
 		return Orion.token;
 	}
 
+	public static getHttpClientConfig(): AxiosRequestConfig {
+		return this.httpClientConfig;
+	}
+
+	public static setHttpClientConfig(config: AxiosRequestConfig): Orion {
+		this.httpClientConfig = config;
+		return Orion;
+	}
+
+	public static makeHttpClient(baseUrl?: string): HttpClient {
+		return new HttpClient(baseUrl || Orion.getApiUrl(), Orion.getHttpClientConfig());
+	}
+
 	protected static buildHttpClientConfig(): AxiosRequestConfig {
 		let config: AxiosRequestConfig = {
 			withCredentials: Orion.getAuthDriver() === AuthDriver.Sanctum
@@ -87,18 +100,5 @@ export default class Orion {
 		}
 
 		return config;
-	}
-
-	public static getHttpClientConfig(): AxiosRequestConfig {
-		return this.httpClientConfig;
-	}
-
-	public static setHttpClientConfig(config: AxiosRequestConfig): Orion {
-		this.httpClientConfig = config;
-		return Orion;
-	}
-
-	public static makeHttpClient(baseUrl?: string): HttpClient {
-		return new HttpClient(baseUrl || Orion.getApiUrl(), Orion.getHttpClientConfig());
 	}
 }

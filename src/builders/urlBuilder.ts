@@ -1,17 +1,15 @@
 import Model from '../model';
 import Orion from '../orion';
 import ModelConstructor from '../contracts/modelConstructor';
-import { ExtractModelAttributesType } from '../types/extractModelAttributesType';
-import { ExtractModelPersistedAttributesType } from '../types/extractModelPersistedAttributesType';
-import { ExtractModelRelationsType } from '../types/extractModelRelationsType';
+import {ExtractModelAttributesType} from '../types/extractModelAttributesType';
+import {ExtractModelPersistedAttributesType} from '../types/extractModelPersistedAttributesType';
+import {ExtractModelRelationsType} from '../types/extractModelRelationsType';
 
 export default class UrlBuilder {
-	public static getResourceBaseUrl<
-		M extends Model,
+	public static getResourceBaseUrl<M extends Model,
 		Attributes = ExtractModelAttributesType<M>,
 		PersistedAttributes = ExtractModelPersistedAttributesType<M>,
-		Relations = ExtractModelRelationsType<M>
-	>(model: ModelConstructor<M, Attributes, PersistedAttributes, Relations>): string {
+		Relations = ExtractModelRelationsType<M>>(model: ModelConstructor<M, Attributes, PersistedAttributes, Relations>): string {
 		return Orion.getApiUrl() + '/' + (model.prototype as M).$getResourceName();
 	}
 
@@ -22,12 +20,10 @@ export default class UrlBuilder {
 		);
 	}
 
-	public static getRelationResourceUrl<
-		R extends Model,
+	public static getRelationResourceUrl<R extends Model,
 		Attributes = ExtractModelAttributesType<R>,
 		PersistedAttributes = ExtractModelPersistedAttributesType<R>,
-		Relations = ExtractModelRelationsType<R>
-	>(
+		Relations = ExtractModelRelationsType<R>>(
 		parent: Model,
 		relationConstructor: ModelConstructor<R, Attributes, PersistedAttributes, Relations>
 	): string {

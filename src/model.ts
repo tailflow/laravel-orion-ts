@@ -1,19 +1,18 @@
 import QueryBuilder from './drivers/default/builders/queryBuilder';
-import { plural } from 'pluralize';
-import { noCase, snakeCase } from 'change-case';
+import pluralize from 'pluralize';
+import {noCase, snakeCase} from 'change-case';
 import ModelConstructor from './contracts/modelConstructor';
-import { AxiosResponse } from 'axios';
-import { DefaultPersistedAttributes } from './types/defaultPersistedAttributes';
+import {AxiosResponse} from 'axios';
+import {DefaultPersistedAttributes} from './types/defaultPersistedAttributes';
 
-export default abstract class Model<
-	Attributes = {},
+export default abstract class Model<Attributes = {},
 	Relations = {},
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>
-> {
+	PersistedAttributes = DefaultPersistedAttributes<Attributes>> {
 	public $attributes!: PersistedAttributes;
 	public $relations!: Relations;
 
 	public $response?: AxiosResponse;
+	protected $keyName: string = 'id';
 
 	constructor(attributes?: PersistedAttributes, relations?: Relations) {
 		this.$init();
@@ -27,7 +26,9 @@ export default abstract class Model<
 		}
 	}
 
-	protected $keyName: string = 'id';
+	public static $query<M extends Model>(this: ModelConstructor<M>): QueryBuilder<M> {
+		return new QueryBuilder<M>(this);
+	}
 
 	public $getKeyName(): string {
 		return this.$keyName;
@@ -65,16 +66,12 @@ export default abstract class Model<
 		return this;
 	}
 
-	public static $query<M extends Model>(this: ModelConstructor<M>): QueryBuilder<M> {
-		return new QueryBuilder<M>(this);
-	}
-
 	public $is(model: Model<Attributes, Relations, PersistedAttributes>): boolean {
 		return this.$getKey() === model.$getKey();
 	}
 
 	public $getResourceName(): string {
-		return snakeCase(plural(noCase(this.constructor.name)));
+		return snakeCase(pluralize(noCase(this.constructor.name)));
 	}
 
 	protected $init() {

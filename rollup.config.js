@@ -1,16 +1,17 @@
-import resolve from 'rollup-plugin-node-resolve'
+import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs'
-import sourceMaps from 'rollup-plugin-sourcemaps'
-import camelCase from 'lodash.camelcase'
-import typescript from 'rollup-plugin-typescript2'
-import json from 'rollup-plugin-json'
+import sourceMaps from 'rollup-plugin-sourcemaps';
+import camelCase from 'lodash.camelcase';
+import typescript from 'rollup-plugin-typescript2';
+import json from 'rollup-plugin-json';
+import multi from '@rollup/plugin-multi-entry';
 
-const pkg = require('./package.json')
+const pkg = require('./package.json');
 
-const libraryName = 'laravel-orion-ts-sdk'
+const libraryName = 'laravel-orion-ts-sdk';
 
 export default {
-  input: `src/orion.ts`,
+  input: 'src/**',
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -34,5 +35,7 @@ export default {
 
     // Resolve source maps to the original source
     sourceMaps(),
+
+		multi()
   ],
 }

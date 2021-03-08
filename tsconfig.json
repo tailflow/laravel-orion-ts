@@ -11,6 +11,7 @@
       "suppressImplicitAnyIndexErrors" : true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
+			"esModuleInterop": true,
       "declarationDir": "dist/types",
       "outDir": "dist/lib",
       "typeRoots": [

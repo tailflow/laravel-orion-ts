@@ -5,7 +5,7 @@ import BelongsToMany from "../../../src/drivers/default/relations/belongsToMany"
 export default class Tag extends Model<{
 	content: string,
 }> {
-	public posts() {
+	public posts() : BelongsToMany<Post> {
 		return new BelongsToMany(Post, this);
 	}
 }

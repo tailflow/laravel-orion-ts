@@ -1,3 +1,4 @@
 export default class AttachResult {
-	constructor(public attached: Array<number | string>) {}
+	constructor(public attached: Array<number | string>) {
+	}
 }

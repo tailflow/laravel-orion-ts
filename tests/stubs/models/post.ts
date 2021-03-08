@@ -7,7 +7,7 @@ export default class Post extends Model<{
 }, {
 	user: User
 }> {
-	public user() {
+	public user() : BelongsTo<User> {
 		return new BelongsTo(User, this);
 	}
 }
