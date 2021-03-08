@@ -1,4 +1,4 @@
-import Orion from "../../src/orion";
+import {Orion} from "../../src/orion";
 import Post from "../stubs/models/post";
 
 Orion.setHost('https://example.com/api');

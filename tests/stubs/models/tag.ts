@@ -1,6 +1,6 @@
-import Model from "../../../src/model";
+import {Model} from "../../../src/model";
 import Post from "./post";
-import BelongsToMany from "../../../src/drivers/default/relations/belongsToMany";
+import {BelongsToMany} from "../../../src/drivers/default/relations/belongsToMany";
 
 export default class Tag extends Model<{
 	content: string,

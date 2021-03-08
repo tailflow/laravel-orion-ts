@@ -1,21 +1,21 @@
 import {HttpMethod} from '../enums/httpMethod';
-import Model from '../../../model';
-import ModelConstructor from '../../../contracts/modelConstructor';
-import Scope from '../scope';
-import Filter from '../filter';
+import {Model} from '../../../model';
+import {ModelConstructor} from '../../../contracts/modelConstructor';
+import {Scope} from '../scope';
+import {Filter} from '../filter';
 import {FilterOperator} from '../enums/filterOperator';
 import {FilterType} from '../enums/filterType';
-import Sorter from '../sorter';
+import {Sorter} from '../sorter';
 import {SortDirection} from '../enums/sortDirection';
-import UrlBuilder from '../../../builders/urlBuilder';
+import {UrlBuilder} from '../../../builders/urlBuilder';
 import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
 import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
-import HttpClient from '../../../httpClient';
+import {HttpClient} from '../../../httpClient';
 import {AxiosResponse} from 'axios';
-import Orion from '../../../orion';
+import {Orion} from '../../../orion';
 
-export default class QueryBuilder<M extends Model,
+export class QueryBuilder<M extends Model,
 	Attributes = ExtractModelAttributesType<M>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<M>,
 	Relations = ExtractModelRelationsType<M>> {

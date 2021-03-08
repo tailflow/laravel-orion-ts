@@ -1,6 +1,6 @@
-import UrlBuilder from "../../../src/builders/urlBuilder";
+import {UrlBuilder} from "../../../src/builders/urlBuilder";
 import Post from "../../stubs/models/post";
-import Orion from "../../../src/orion";
+import {Orion} from "../../../src/orion";
 import User from "../../stubs/models/user";
 
 describe('UriBuilder tests', () => {

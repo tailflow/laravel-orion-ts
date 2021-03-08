@@ -1,8 +1,8 @@
 import {AuthDriver} from './drivers/default/enums/authDriver';
-import HttpClient from './httpClient';
+import {HttpClient} from './httpClient';
 import {AxiosRequestConfig} from 'axios';
 
-export default class Orion {
+export class Orion {
 	protected static host: string;
 	protected static prefix: string;
 	protected static authDriver: AuthDriver;

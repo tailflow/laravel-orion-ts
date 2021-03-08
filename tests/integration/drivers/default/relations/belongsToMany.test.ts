@@ -1,12 +1,12 @@
 import Post from '../../../../stubs/models/post';
 import makeServer from "../server";
-import BelongsToMany from "../../../../../src/drivers/default/relations/belongsToMany";
+import {BelongsToMany} from "../../../../../src/drivers/default/relations/belongsToMany";
 import Tag from "../../../../stubs/models/tag";
-import AttachResult from "../../../../../src/drivers/default/results/attachResult";
-import DetachResult from "../../../../../src/drivers/default/results/detachResult";
-import SyncResult from "../../../../../src/drivers/default/results/syncResult";
-import ToggleResult from "../../../../../src/drivers/default/results/toggleResult";
-import UpdatePivotResult from "../../../../../src/drivers/default/results/updatePivotResult";
+import {AttachResult} from "../../../../../src/drivers/default/results/attachResult";
+import {DetachResult} from "../../../../../src/drivers/default/results/detachResult";
+import {SyncResult} from "../../../../../src/drivers/default/results/syncResult";
+import {ToggleResult} from "../../../../../src/drivers/default/results/toggleResult";
+import {UpdatePivotResult} from "../../../../../src/drivers/default/results/updatePivotResult";
 
 let server: any;
 

@@ -1,7 +1,7 @@
 import {FilterOperator} from './enums/filterOperator';
 import {FilterType} from './enums/filterType';
 
-export default class Filter {
+export class Filter {
 	constructor(
 		protected field: string,
 		protected operator: FilterOperator,

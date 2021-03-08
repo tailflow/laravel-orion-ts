@@ -1,11 +1,11 @@
-import QueryBuilder from './drivers/default/builders/queryBuilder';
+import {QueryBuilder} from './drivers/default/builders/queryBuilder';
 import pluralize from 'pluralize';
 import {noCase, snakeCase} from 'change-case';
-import ModelConstructor from './contracts/modelConstructor';
+import {ModelConstructor} from './contracts/modelConstructor';
 import {AxiosResponse} from 'axios';
 import {DefaultPersistedAttributes} from './types/defaultPersistedAttributes';
 
-export default abstract class Model<Attributes = {},
+export abstract class Model<Attributes = {},
 	Relations = {},
 	PersistedAttributes = DefaultPersistedAttributes<Attributes>> {
 	public $attributes!: PersistedAttributes;

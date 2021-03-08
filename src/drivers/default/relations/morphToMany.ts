@@ -1,10 +1,10 @@
-import Model from '../../../model';
-import BelongsToMany from './belongsToMany';
+import {Model} from '../../../model';
+import {BelongsToMany} from './belongsToMany';
 import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
 import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
 
-export default class MorphToMany<Relation extends Model,
+export class MorphToMany<Relation extends Model,
 	Pivot = {},
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,

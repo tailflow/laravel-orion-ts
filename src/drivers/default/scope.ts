@@ -1,4 +1,4 @@
-export default class Scope {
+export class Scope {
 	constructor(protected name: string, protected parameters: Array<any> = []) {
 	}
 

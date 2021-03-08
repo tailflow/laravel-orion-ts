@@ -1,16 +1,16 @@
-import Model from '../../../model';
-import RelationQueryBuilder from '../builders/relationQueryBuilder';
+import {Model} from '../../../model';
+import {RelationQueryBuilder} from '../builders/relationQueryBuilder';
 import {HttpMethod} from '../enums/httpMethod';
-import AttachResult from '../results/attachResult';
+import {AttachResult} from '../results/attachResult';
 import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
-import DetachResult from '../results/detachResult';
-import SyncResult from '../results/syncResult';
-import ToggleResult from '../results/toggleResult';
-import UpdatePivotResult from '../results/updatePivotResult';
+import {DetachResult} from '../results/detachResult';
+import {SyncResult} from '../results/syncResult';
+import {ToggleResult} from '../results/toggleResult';
+import {UpdatePivotResult} from '../results/updatePivotResult';
 import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
 
-export default class BelongsToMany<Relation extends Model,
+export class BelongsToMany<Relation extends Model,
 	Pivot = {},
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,

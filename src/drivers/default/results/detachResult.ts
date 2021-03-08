@@ -1,4 +1,4 @@
-export default class DetachResult {
+export class DetachResult {
 	constructor(public detached: Array<number | string>) {
 	}
 }

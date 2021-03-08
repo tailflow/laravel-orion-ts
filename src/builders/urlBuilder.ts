@@ -1,11 +1,11 @@
-import Model from '../model';
-import Orion from '../orion';
-import ModelConstructor from '../contracts/modelConstructor';
+import {Model} from '../model';
+import {Orion} from '../orion';
+import {ModelConstructor} from '../contracts/modelConstructor';
 import {ExtractModelAttributesType} from '../types/extractModelAttributesType';
 import {ExtractModelPersistedAttributesType} from '../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../types/extractModelRelationsType';
 
-export default class UrlBuilder {
+export class UrlBuilder {
 	public static getResourceBaseUrl<M extends Model,
 		Attributes = ExtractModelAttributesType<M>,
 		PersistedAttributes = ExtractModelPersistedAttributesType<M>,

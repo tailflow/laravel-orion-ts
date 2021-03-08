@@ -1,4 +1,4 @@
-import HasMany from "../../../../../src/drivers/default/relations/hasMany";
+import {HasMany} from "../../../../../src/drivers/default/relations/hasMany";
 import Post from '../../../../stubs/models/post';
 import makeServer from "../server";
 import User from "../../../../stubs/models/user";

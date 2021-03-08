@@ -1,4 +1,4 @@
-export default class SyncResult {
+export class SyncResult {
 	constructor(
 		public attached: Array<number | string>,
 		public updated: Array<number | string>,

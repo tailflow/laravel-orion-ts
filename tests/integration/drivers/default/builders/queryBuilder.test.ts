@@ -1,4 +1,4 @@
-import QueryBuilder from "../../../../../src/drivers/default/builders/queryBuilder";
+import {QueryBuilder} from "../../../../../src/drivers/default/builders/queryBuilder";
 import Post from '../../../../stubs/models/post';
 import makeServer from "../server";
 import {FilterOperator} from "../../../../../src/drivers/default/enums/filterOperator";

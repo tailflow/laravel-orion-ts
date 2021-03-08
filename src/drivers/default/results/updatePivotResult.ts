@@ -1,4 +1,4 @@
-export default class UpdatePivotResult {
+export class UpdatePivotResult {
 	constructor(public updated: Array<number | string>) {
 	}
 }

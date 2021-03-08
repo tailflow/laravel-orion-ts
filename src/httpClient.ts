@@ -1,9 +1,9 @@
 import {HttpMethod} from './drivers/default/enums/httpMethod';
-import Orion from './orion';
+import {Orion} from './orion';
 import {AuthDriver} from './drivers/default/enums/authDriver';
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 
-export default class HttpClient {
+export class HttpClient {
 	protected static xsrfTokenFetched: boolean = false;
 	protected client: AxiosInstance;
 

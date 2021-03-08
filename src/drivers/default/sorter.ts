@@ -1,6 +1,6 @@
 import {SortDirection} from './enums/sortDirection';
 
-export default class Sorter {
+export class Sorter {
 	constructor(protected field: string, protected direction: SortDirection = SortDirection.Asc) {
 	}
 

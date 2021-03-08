@@ -1,4 +1,4 @@
-export default class AttachResult {
+export class AttachResult {
 	constructor(public attached: Array<number | string>) {
 	}
 }

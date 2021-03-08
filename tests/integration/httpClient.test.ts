@@ -1,4 +1,4 @@
-import Orion from "../../src/orion";
+import {Orion} from "../../src/orion";
 import makeServer from "./drivers/default/server";
 import {HttpMethod} from "../../src/drivers/default/enums/httpMethod";
 import {AuthDriver} from "../../src/drivers/default/enums/authDriver";

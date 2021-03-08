@@ -1,4 +1,4 @@
-import Orion from "../../src/orion";
+import {Orion} from "../../src/orion";
 import {AuthDriver} from "../../src/drivers/default/enums/authDriver";
 
 describe('Orion tests', () => {
