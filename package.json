@@ -19,7 +19,6 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"prepublish": "@build",
 		"prebuild": "rimraf lib",
 		"build": "tsc",
 		"dev": "tsc -w",
