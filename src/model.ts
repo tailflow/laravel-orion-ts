@@ -30,6 +30,20 @@ export abstract class Model<Attributes = {},
 		return new QueryBuilder<M>(this);
 	}
 
+	public $query<M extends Model>(): QueryBuilder<M> {
+		return new QueryBuilder<M>(this.constructor as ModelConstructor<M>);
+	}
+
+	public async $save<M extends Model>(attributes?: Attributes): Promise<this> {
+		if (attributes) {
+			this.$setAttributes(attributes as unknown as PersistedAttributes);
+		}
+
+		await this.$query().update(this.$getKey(), attributes || this.$attributes);
+
+		return this;
+	}
+
 	public $getKeyName(): string {
 		return this.$keyName;
 	}
