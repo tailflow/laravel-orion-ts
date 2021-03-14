@@ -44,6 +44,12 @@ export abstract class Model<Attributes = {},
 		return this;
 	}
 
+	public async $destroy<M extends Model>(force: boolean = false): Promise<this> {
+		await this.$query().destroy(this.$getKey(), force);
+
+		return this;
+	}
+
 	public $getKeyName(): string {
 		return this.$keyName;
 	}

@@ -23,6 +23,26 @@ describe('Model tests', () => {
 
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 	});
+
+	test('trashing a model', async () => {
+		server.schema.posts.create({title: 'Test Post'});
+
+		let post = await Post.$query().find(1);
+
+		await post.$destroy();
+
+		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
+	});
+
+	test('force deleting a model', async () => {
+		server.schema.posts.create({title: 'Test Post'});
+
+		let post = await Post.$query().find(1);
+
+		await post.$destroy(true);
+
+		expect(server.schema.posts.find('1')).toBeNull();
+	});
 });
 
 
