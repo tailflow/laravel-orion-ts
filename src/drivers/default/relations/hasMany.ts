@@ -4,13 +4,12 @@ import {HttpMethod} from '../enums/httpMethod';
 import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
 import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
-import {ExtractModelAllAttributesType} from "../../../types/extractModelAllAttributesType";
 
 export class HasMany<Relation extends Model,
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
 	Relations = ExtractModelRelationsType<Relation>,
-	AllAttributes = ExtractModelAllAttributesType<Relation>> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations, AllAttributes> {
+	> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations> {
 	public async associate(key: string | number): Promise<Relation> {
 		const response = await this.httpClient.request(
 			`/associate`,

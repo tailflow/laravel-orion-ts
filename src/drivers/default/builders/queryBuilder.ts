@@ -14,16 +14,17 @@ import {ExtractModelRelationsType} from '../../../types/extractModelRelationsTyp
 import {HttpClient} from '../../../httpClient';
 import {AxiosResponse} from 'axios';
 import {Orion} from '../../../orion';
-import {ExtractModelAllAttributesType} from "../../../types/extractModelAllAttributesType";
+import {ExtractModelKeyType} from "../../../types/extractModelKeyType";
 
 export class QueryBuilder<M extends Model,
 	Attributes = ExtractModelAttributesType<M>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<M>,
 	Relations = ExtractModelRelationsType<M>,
-	AllAttributes = ExtractModelAllAttributesType<M>,
+	Key = ExtractModelKeyType<M>,
+	AllAttributes = Attributes & PersistedAttributes,
 	> {
 	protected baseUrl: string;
-	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, AllAttributes>;
+	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>;
 	protected httpClient: HttpClient;
 
 	protected includes: string[] = [];
@@ -36,7 +37,7 @@ export class QueryBuilder<M extends Model,
 	protected searchValue?: string;
 
 	constructor(
-		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, AllAttributes>,
+		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>,
 		baseUrl?: string
 	) {
 		if (baseUrl) {
@@ -79,7 +80,7 @@ export class QueryBuilder<M extends Model,
 		});
 	}
 
-	public async find(key: string | number): Promise<M> {
+	public async find(key: Key): Promise<M> {
 		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.GET,
@@ -100,7 +101,7 @@ export class QueryBuilder<M extends Model,
 		return this.hydrate(response.data.data, response);
 	}
 
-	public async update(key: string | number, attributes: Attributes): Promise<M> {
+	public async update(key: Key, attributes: Attributes): Promise<M> {
 		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.PATCH,
@@ -111,7 +112,7 @@ export class QueryBuilder<M extends Model,
 		return this.hydrate(response.data.data, response);
 	}
 
-	public async destroy(key: string | number, force: boolean = false): Promise<M> {
+	public async destroy(key: Key, force: boolean = false): Promise<M> {
 		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.DELETE,
@@ -121,7 +122,7 @@ export class QueryBuilder<M extends Model,
 		return this.hydrate(response.data.data, response);
 	}
 
-	public async restore(key: string | number): Promise<M> {
+	public async restore(key: Key): Promise<M> {
 		const response = await this.httpClient.request(
 			`/${key}/restore`,
 			HttpMethod.POST,

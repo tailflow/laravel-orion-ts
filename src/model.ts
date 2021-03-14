@@ -8,6 +8,7 @@ import {DefaultPersistedAttributes} from "./types/defaultPersistedAttributes";
 export abstract class Model<Attributes = {},
 	PersistedAttributes = {} | DefaultPersistedAttributes,
 	Relations = {},
+	Key extends number | string = number | string,
 	AllAttributes = Attributes & PersistedAttributes> {
 	public $attributes!: AllAttributes;
 	public $relations!: Relations;
@@ -61,11 +62,11 @@ export abstract class Model<Attributes = {},
 		return this;
 	}
 
-	public $getKey(): number | string {
+	public $getKey(): Key {
 		return this.$attributes[this.$getKeyName()];
 	}
 
-	public $setKey(key: number | string): this {
+	public $setKey(key: Key): this {
 		this.$attributes[this.$getKeyName()] = key;
 
 		return this;
