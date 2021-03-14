@@ -9,12 +9,14 @@ import {ToggleResult} from '../results/toggleResult';
 import {UpdatePivotResult} from '../results/updatePivotResult';
 import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
+import {ExtractModelAllAttributesType} from "../../../types/extractModelAllAttributesType";
 
 export class BelongsToMany<Relation extends Model,
 	Pivot = {},
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
-	Relations = ExtractModelRelationsType<Relation>> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations> {
+	Relations = ExtractModelRelationsType<Relation>,
+	AllAttributes = ExtractModelAllAttributesType<Relation>> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations,AllAttributes> {
 	public async attach(
 		keys: Array<number | string>,
 		duplicates: boolean = false

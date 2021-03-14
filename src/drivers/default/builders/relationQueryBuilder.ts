@@ -6,13 +6,16 @@ import {ExtractModelAttributesType} from '../../../types/extractModelAttributesT
 import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
 import {Orion} from '../../../orion';
+import {ExtractModelAllAttributesType} from "../../../types/extractModelAllAttributesType";
 
 export class RelationQueryBuilder<Relation extends Model,
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
-	Relations = ExtractModelRelationsType<Relation>> extends QueryBuilder<Relation, Attributes, PersistedAttributes, Relations> {
+	Relations = ExtractModelRelationsType<Relation>,
+	AllAttributes = ExtractModelAllAttributesType<Relation>,
+	> extends QueryBuilder<Relation, Attributes, PersistedAttributes, Relations, AllAttributes> {
 	constructor(
-		relationConstructor: ModelConstructor<Relation, Attributes, PersistedAttributes, Relations>,
+		relationConstructor: ModelConstructor<Relation, Attributes, PersistedAttributes, Relations, AllAttributes>,
 		parent: Model<any>
 	) {
 		super(relationConstructor);

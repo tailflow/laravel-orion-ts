@@ -14,13 +14,16 @@ import {ExtractModelRelationsType} from '../../../types/extractModelRelationsTyp
 import {HttpClient} from '../../../httpClient';
 import {AxiosResponse} from 'axios';
 import {Orion} from '../../../orion';
+import {ExtractModelAllAttributesType} from "../../../types/extractModelAllAttributesType";
 
 export class QueryBuilder<M extends Model,
 	Attributes = ExtractModelAttributesType<M>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<M>,
-	Relations = ExtractModelRelationsType<M>> {
+	Relations = ExtractModelRelationsType<M>,
+	AllAttributes = ExtractModelAllAttributesType<M>,
+	> {
 	protected baseUrl: string;
-	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations>;
+	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, AllAttributes>;
 	protected httpClient: HttpClient;
 
 	protected includes: string[] = [];
@@ -33,7 +36,7 @@ export class QueryBuilder<M extends Model,
 	protected searchValue?: string;
 
 	constructor(
-		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations>,
+		modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, AllAttributes>,
 		baseUrl?: string
 	) {
 		if (baseUrl) {
@@ -53,7 +56,7 @@ export class QueryBuilder<M extends Model,
 			this.prepareQueryParams({limit, page})
 		);
 
-		return response.data.data.map((attributes: PersistedAttributes & Relations) => {
+		return response.data.data.map((attributes: AllAttributes & Relations) => {
 			return this.hydrate(attributes, response);
 		});
 	}
@@ -71,7 +74,7 @@ export class QueryBuilder<M extends Model,
 			}
 		);
 
-		return response.data.data.map((attributes: PersistedAttributes & Relations) => {
+		return response.data.data.map((attributes: AllAttributes & Relations) => {
 			return this.hydrate(attributes, response);
 		});
 	}
@@ -170,7 +173,7 @@ export class QueryBuilder<M extends Model,
 		return this;
 	}
 
-	public hydrate(raw: PersistedAttributes & Relations, response?: AxiosResponse): M {
+	public hydrate(raw: AllAttributes & Relations, response?: AxiosResponse): M {
 		const model = new this.modelConstructor();
 
 		for (const field of Object.keys(raw)) {

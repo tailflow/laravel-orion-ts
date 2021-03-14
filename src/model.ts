@@ -3,18 +3,19 @@ import pluralize from 'pluralize';
 import {noCase, snakeCase} from 'change-case';
 import {ModelConstructor} from './contracts/modelConstructor';
 import {AxiosResponse} from 'axios';
-import {DefaultPersistedAttributes} from './types/defaultPersistedAttributes';
+import {DefaultPersistedAttributes} from "./types/defaultPersistedAttributes";
 
 export abstract class Model<Attributes = {},
+	PersistedAttributes = {} | DefaultPersistedAttributes,
 	Relations = {},
-	PersistedAttributes = DefaultPersistedAttributes<Attributes>> {
-	public $attributes!: PersistedAttributes;
+	AllAttributes = Attributes & PersistedAttributes> {
+	public $attributes!: AllAttributes;
 	public $relations!: Relations;
 
 	public $response?: AxiosResponse;
 	protected $keyName: string = 'id';
 
-	constructor(attributes?: PersistedAttributes, relations?: Relations) {
+	constructor(attributes?: AllAttributes, relations?: Relations) {
 		this.$init();
 
 		if (attributes) {
@@ -36,7 +37,7 @@ export abstract class Model<Attributes = {},
 
 	public async $save<M extends Model>(attributes?: Attributes): Promise<this> {
 		if (attributes) {
-			this.$setAttributes(attributes as unknown as PersistedAttributes);
+			this.$setAttributes(attributes as unknown as AllAttributes);
 		}
 
 		await this.$query().update(this.$getKey(), attributes || this.$attributes);
@@ -70,7 +71,7 @@ export abstract class Model<Attributes = {},
 		return this;
 	}
 
-	public $setAttributes(attributes: PersistedAttributes): this {
+	public $setAttributes(attributes: AllAttributes): this {
 		for (const attribute in attributes) {
 			this.$attributes[attribute] = attributes[attribute];
 		}
@@ -86,7 +87,7 @@ export abstract class Model<Attributes = {},
 		return this;
 	}
 
-	public $is(model: Model<Attributes, Relations, PersistedAttributes>): boolean {
+	public $is(model: Model<Attributes, PersistedAttributes, Relations>): boolean {
 		return this.$getKey() === model.$getKey();
 	}
 
@@ -96,7 +97,7 @@ export abstract class Model<Attributes = {},
 
 	protected $init() {
 		if (!this.$attributes) {
-			this.$attributes = {} as PersistedAttributes;
+			this.$attributes = {} as AllAttributes;
 		}
 
 		if (!this.$relations) {
