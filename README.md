@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-<a href="https://github.com/tailflow/laravel-orion/actions"><img src="https://img.shields.io/github/workflow/status/tailflow/laravel-orion/default" alt="Build Status"></a>
+<a href="https://github.com/tailflow/laravel-orion-ts/actions"><img src="https://img.shields.io/github/workflow/status/tailflow/laravel-orion-ts/default" alt="Build Status"></a>
 </p>
 
 ## Introduction
