@@ -6,6 +6,10 @@
 <a href="https://github.com/tailflow/laravel-orion/actions"><img src="https://img.shields.io/github/workflow/status/tailflow/laravel-orion/default" alt="Build Status"></a>
 </p>
 
-## TypeScript SDK
+## Introduction
+
+Laravel Orion TypeScript SDK allows you to build expressive frontend applications powered by REST API.
+
+## Official Documentation
 
 Documentation for Laravel Orion and its TypeScript SDK can be found on the [website](https://tailflow.github.io/laravel-orion-docs/).
