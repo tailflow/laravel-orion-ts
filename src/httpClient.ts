@@ -25,7 +25,13 @@ export class HttpClient {
 			await this.prefetchXSRFToken();
 		}
 
-		return this.client.request({url, method, params, data});
+		let config: AxiosRequestConfig = {url, method, params};
+
+		if (method !== HttpMethod.GET) {
+			config.data = data;
+		}
+
+		return this.client.request(config);
 	}
 
 	public async prefetchXSRFToken(): Promise<void> {
