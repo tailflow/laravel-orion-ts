@@ -54,7 +54,8 @@ export class QueryBuilder<M extends Model,
 		const response = await this.httpClient.request(
 			'/',
 			HttpMethod.GET,
-			this.prepareQueryParams({limit, page})
+			this.prepareQueryParams({limit, page}),
+			undefined
 		);
 
 		return response.data.data.map((attributes: AllAttributes & Relations) => {
@@ -84,7 +85,8 @@ export class QueryBuilder<M extends Model,
 		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.GET,
-			this.prepareQueryParams()
+			this.prepareQueryParams(),
+			undefined
 		);
 
 		return this.hydrate(response.data.data, response);
