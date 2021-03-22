@@ -38,7 +38,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: package
-          path: ./
+          path: |
+            ./
+            !node_modules
   publish:
     if: github.event_name == 'release'
     needs: test
