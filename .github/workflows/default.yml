@@ -67,5 +67,5 @@ jobs:
         run: npm config set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to NPM
-        working-directory: ~/build
+        working-directory: /home/runner/build
         run: npm publish --verbose
