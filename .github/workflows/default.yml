@@ -46,7 +46,7 @@ jobs:
             !node_modules
   publish:
     if: github.event_name == 'release'
-    needs: test
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
