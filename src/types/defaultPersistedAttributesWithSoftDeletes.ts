@@ -1,6 +1,6 @@
 import {DefaultPersistedAttributes} from './defaultPersistedAttributes';
 
 export type DefaultPersistedAttributesWithSoftDeletes<T> = T &
-	DefaultPersistedAttributes<T> & {
+	DefaultPersistedAttributes & {
 	deleted_at: string | null;
 };
