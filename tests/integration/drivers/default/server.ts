@@ -46,7 +46,7 @@ export default function makeServer() {
 				const id = request.params.id
 				const attrs = JSON.parse(request.requestBody);
 
-				let post = schema.posts.find(id);
+				const post = schema.posts.find(id);
 
 				return post.update(attrs)
 			});

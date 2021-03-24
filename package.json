@@ -22,10 +22,14 @@
 		"prebuild": "rimraf lib",
 		"build": "tsc",
 		"dev": "tsc -w",
-		"test": "jest"
+		"test": "jest",
+		"lint": "eslint . --ext .ts"
 	},
 	"devDependencies": {
 		"@types/jest": "^26.0.20",
+		"@typescript-eslint/eslint-plugin": "^4.19.0",
+		"@typescript-eslint/parser": "^4.19.0",
+		"eslint": "^7.22.0",
 		"jest": "^26.6.3",
 		"lodash.camelcase": "^4.3.0",
 		"miragejs": "^0.1.41",

@@ -98,7 +98,7 @@ export class Orion {
 	}
 
 	protected static buildHttpClientConfig(): AxiosRequestConfig {
-		let config: AxiosRequestConfig = {
+		const config: AxiosRequestConfig = {
 			withCredentials: Orion.getAuthDriver() === AuthDriver.Sanctum
 		};
 

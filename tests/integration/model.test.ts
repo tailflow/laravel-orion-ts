@@ -16,7 +16,7 @@ describe('Model tests', () => {
 	test('saving a model', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
-		let post = await Post.$query().find(1);
+		const post = await Post.$query().find(1);
 
 		post.$attributes.title = 'Updated Post';
 		await post.$save();
@@ -27,7 +27,7 @@ describe('Model tests', () => {
 	test('trashing a model', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
-		let post = await Post.$query().find(1);
+		const post = await Post.$query().find(1);
 
 		await post.$destroy();
 
@@ -37,7 +37,7 @@ describe('Model tests', () => {
 	test('force deleting a model', async () => {
 		server.schema.posts.create({title: 'Test Post'});
 
-		let post = await Post.$query().find(1);
+		const post = await Post.$query().find(1);
 
 		await post.$destroy(true);
 

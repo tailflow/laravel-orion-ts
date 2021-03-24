@@ -1,7 +1,7 @@
 import {RestSerializer} from "miragejs";
 import {snakeCase} from "change-case";
 
-export let LaravelSerializer = RestSerializer.extend({
+export const LaravelSerializer = RestSerializer.extend({
 	keyForCollection() {
 		return 'data';
 	},

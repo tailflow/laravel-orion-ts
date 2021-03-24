@@ -23,7 +23,7 @@ export class HttpClient {
 			await this.prefetchXSRFToken();
 		}
 
-		let config: AxiosRequestConfig = Object.assign(Orion.getHttpClientConfig(), {
+		const config: AxiosRequestConfig = Object.assign(Orion.getHttpClientConfig(), {
 			baseURL: this.baseUrl,
 			url,
 			method,
