@@ -11,7 +11,7 @@ import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPe
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
 
 export class BelongsToMany<Relation extends Model,
-	Pivot = {},
+	Pivot = Record<string, unknown>,
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
 	Relations = ExtractModelRelationsType<Relation>> extends RelationQueryBuilder<Relation, Attributes, PersistedAttributes, Relations> {

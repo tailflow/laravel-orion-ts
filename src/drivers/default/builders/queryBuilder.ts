@@ -184,7 +184,7 @@ export class QueryBuilder<M extends Model,
 				const relationQueryBuilder: QueryBuilder<Model> = model[field]();
 
 				if (Array.isArray(rawValue)) {
-					model.$relations[field] = rawValue.map((rawRelation: any) => {
+					model.$relations[field] = rawValue.map((rawRelation: Record<string, unknown>) => {
 						return relationQueryBuilder.hydrate(rawRelation, response);
 					});
 				} else {

@@ -5,9 +5,9 @@ import {ModelConstructor} from './contracts/modelConstructor';
 import {AxiosResponse} from 'axios';
 import {DefaultPersistedAttributes} from "./types/defaultPersistedAttributes";
 
-export abstract class Model<Attributes = {},
-	PersistedAttributes = {} | DefaultPersistedAttributes,
-	Relations = {},
+export abstract class Model<Attributes = Record<string, unknown>,
+	PersistedAttributes = Record<string, unknown> | DefaultPersistedAttributes,
+	Relations = Record<string, unknown>,
 	Key extends number | string = number | string,
 	AllAttributes = Attributes & PersistedAttributes> {
 	public $attributes!: AllAttributes;
@@ -41,7 +41,7 @@ export abstract class Model<Attributes = {},
 			this.$setAttributes(attributes as unknown as AllAttributes);
 		}
 
-		await this.$query().update(this.$getKey(), attributes || this.$attributes);
+		await this.$query().update(this.$getKey(), (attributes || this.$attributes) as Record<string, unknown>);
 
 		return this;
 	}

@@ -5,7 +5,7 @@ import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPe
 import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
 
 export class MorphToMany<Relation extends Model,
-	Pivot = {},
+	Pivot = Record<string, unknown>,
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
 	Relations = ExtractModelRelationsType<Relation>,
