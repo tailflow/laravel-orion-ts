@@ -1,6 +1,6 @@
 import {AuthDriver} from './drivers/default/enums/authDriver';
 import {HttpClient} from './httpClient';
-import {AxiosRequestConfig} from 'axios';
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 
 export class Orion {
 	protected static host: string;
@@ -9,6 +9,7 @@ export class Orion {
 	protected static token: string | null = null;
 
 	protected static httpClientConfig: AxiosRequestConfig;
+	protected static makeHttpClientCallback: (() => AxiosInstance) | null = null;
 
 	public static init(
 		host: string,
@@ -85,7 +86,15 @@ export class Orion {
 	}
 
 	public static makeHttpClient(baseUrl?: string): HttpClient {
-		return new HttpClient(baseUrl || Orion.getApiUrl(), Orion.getHttpClientConfig());
+		const client: AxiosInstance = this.makeHttpClientCallback ? this.makeHttpClientCallback() : axios.create();
+
+		return new HttpClient(baseUrl || Orion.getApiUrl(), client);
+	}
+
+	public static makeHttpClientUsing(callback: () => AxiosInstance): Orion {
+		this.makeHttpClientCallback = callback;
+
+		return this;
 	}
 
 	protected static buildHttpClientConfig(): AxiosRequestConfig {

@@ -1,18 +1,16 @@
 import {HttpMethod} from './drivers/default/enums/httpMethod';
 import {Orion} from './orion';
 import {AuthDriver} from './drivers/default/enums/authDriver';
-import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 
 export class HttpClient {
 	protected static xsrfTokenFetched: boolean = false;
+	protected baseUrl: string;
 	protected client: AxiosInstance;
 
-	constructor(baseUrl: string, config: AxiosRequestConfig) {
-		let clientConfig: AxiosRequestConfig = Object.assign(config, {
-			baseURL: baseUrl
-		});
-
-		this.client = axios.create(clientConfig);
+	constructor(baseUrl: string, client: AxiosInstance) {
+		this.baseUrl = baseUrl;
+		this.client = client;
 	}
 
 	public async request(
@@ -25,7 +23,12 @@ export class HttpClient {
 			await this.prefetchXSRFToken();
 		}
 
-		let config: AxiosRequestConfig = {url, method, params};
+		let config: AxiosRequestConfig = Object.assign(Orion.getHttpClientConfig(), {
+			baseURL: this.baseUrl,
+			url,
+			method,
+			params
+		});
 
 		if (method !== HttpMethod.GET) {
 			config.data = data;
