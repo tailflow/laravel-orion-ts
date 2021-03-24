@@ -1,7 +1,7 @@
-import {HttpMethod} from './drivers/default/enums/httpMethod';
-import {Orion} from './orion';
-import {AuthDriver} from './drivers/default/enums/authDriver';
-import {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import { HttpMethod } from './drivers/default/enums/httpMethod';
+import { Orion } from './orion';
+import { AuthDriver } from './drivers/default/enums/authDriver';
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 export class HttpClient {
 	protected static xsrfTokenFetched: boolean = false;
@@ -27,7 +27,7 @@ export class HttpClient {
 			baseURL: this.baseUrl,
 			url,
 			method,
-			params
+			params,
 		});
 
 		if (method !== HttpMethod.GET) {
@@ -43,7 +43,7 @@ export class HttpClient {
 		}
 
 		await this.client
-			.get(`sanctum/csrf-cookie`, {baseURL: Orion.getHost()})
+			.get(`sanctum/csrf-cookie`, { baseURL: Orion.getHost() })
 			.then(() => {
 				HttpClient.xsrfTokenFetched = true;
 			})

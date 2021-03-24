@@ -1,5 +1,5 @@
-import makeServer from "./drivers/default/server";
-import Post from "../stubs/models/post";
+import makeServer from './drivers/default/server';
+import Post from '../stubs/models/post';
 
 let server: any;
 
@@ -8,13 +8,12 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	server.shutdown()
+	server.shutdown();
 });
 
 describe('Model tests', () => {
-
 	test('saving a model', async () => {
-		server.schema.posts.create({title: 'Test Post'});
+		server.schema.posts.create({ title: 'Test Post' });
 
 		const post = await Post.$query().find(1);
 
@@ -25,7 +24,7 @@ describe('Model tests', () => {
 	});
 
 	test('trashing a model', async () => {
-		server.schema.posts.create({title: 'Test Post'});
+		server.schema.posts.create({ title: 'Test Post' });
 
 		const post = await Post.$query().find(1);
 
@@ -35,7 +34,7 @@ describe('Model tests', () => {
 	});
 
 	test('force deleting a model', async () => {
-		server.schema.posts.create({title: 'Test Post'});
+		server.schema.posts.create({ title: 'Test Post' });
 
 		const post = await Post.$query().find(1);
 
@@ -44,5 +43,3 @@ describe('Model tests', () => {
 		expect(server.schema.posts.find('1')).toBeNull();
 	});
 });
-
-

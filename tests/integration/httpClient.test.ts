@@ -1,7 +1,7 @@
-import {Orion} from "../../src/orion";
-import makeServer from "./drivers/default/server";
-import {HttpMethod} from "../../src/drivers/default/enums/httpMethod";
-import {AuthDriver} from "../../src/drivers/default/enums/authDriver";
+import { Orion } from '../../src/orion';
+import makeServer from './drivers/default/server';
+import { HttpMethod } from '../../src/drivers/default/enums/httpMethod';
+import { AuthDriver } from '../../src/drivers/default/enums/authDriver';
 
 let server: any;
 
@@ -10,13 +10,12 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	server.shutdown()
+	server.shutdown();
 });
 
 describe('HttpClient tests', () => {
-
 	test('using bearer token', async () => {
-		server.schema.posts.create({title: 'Test Post'});
+		server.schema.posts.create({ title: 'Test Post' });
 
 		Orion.setToken('test');
 		await Orion.makeHttpClient().request('/posts', HttpMethod.GET);
@@ -26,7 +25,7 @@ describe('HttpClient tests', () => {
 	});
 
 	test('prefetching xsrf token', async () => {
-		server.schema.posts.create({title: 'Test Post'});
+		server.schema.posts.create({ title: 'Test Post' });
 
 		Orion.setAuthDriver(AuthDriver.Sanctum);
 		await Orion.makeHttpClient().request('/posts', HttpMethod.GET);

@@ -1,12 +1,12 @@
 import Post from '../../../../stubs/models/post';
-import makeServer from "../server";
-import {BelongsToMany} from "../../../../../src/drivers/default/relations/belongsToMany";
-import Tag from "../../../../stubs/models/tag";
-import {AttachResult} from "../../../../../src/drivers/default/results/attachResult";
-import {DetachResult} from "../../../../../src/drivers/default/results/detachResult";
-import {SyncResult} from "../../../../../src/drivers/default/results/syncResult";
-import {ToggleResult} from "../../../../../src/drivers/default/results/toggleResult";
-import {UpdatePivotResult} from "../../../../../src/drivers/default/results/updatePivotResult";
+import makeServer from '../server';
+import { BelongsToMany } from '../../../../../src/drivers/default/relations/belongsToMany';
+import Tag from '../../../../stubs/models/tag';
+import { AttachResult } from '../../../../../src/drivers/default/results/attachResult';
+import { DetachResult } from '../../../../../src/drivers/default/results/detachResult';
+import { SyncResult } from '../../../../../src/drivers/default/results/syncResult';
+import { ToggleResult } from '../../../../../src/drivers/default/results/toggleResult';
+import { UpdatePivotResult } from '../../../../../src/drivers/default/results/updatePivotResult';
 
 let server: any;
 
@@ -15,21 +15,20 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-	server.shutdown()
+	server.shutdown();
 });
 
 describe('BelongsToMany tests', () => {
-
 	type TagAttributes = {
-		content: string
+		content: string;
 	};
 
 	type TagPivot = {
-		example_pivot_field: string
+		example_pivot_field: string;
 	};
 
 	test('attaching resources', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
@@ -40,11 +39,11 @@ describe('BelongsToMany tests', () => {
 		expect(attachResult.attached).toStrictEqual([2, 5, 7]);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({duplicates: 'false'});
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'false' });
 	});
 
 	test('attaching resources with duplicates', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
@@ -52,52 +51,55 @@ describe('BelongsToMany tests', () => {
 		await belongsToManyRelation.attach([2, 5, 7], true);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({duplicates: 'true'});
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'true' });
 	});
 
 	test('attaching resources with fields', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const attachResult = await belongsToManyRelation.attachWithFields({
 			2: {
-				example_pivot_field: 'value A'
+				example_pivot_field: 'value A',
 			},
 			5: {
-				example_pivot_field: "value B"
-			}
+				example_pivot_field: 'value B',
+			},
 		});
 
 		expect(attachResult).toBeInstanceOf(AttachResult);
 		expect(attachResult.attached).toStrictEqual(['2', '5']);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({duplicates: 'false'});
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'false' });
 	});
 
 	test('attaching resources with fields with duplicates', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
-		await belongsToManyRelation.attachWithFields({
-			2: {
-				example_pivot_field: 'value A'
+		await belongsToManyRelation.attachWithFields(
+			{
+				2: {
+					example_pivot_field: 'value A',
+				},
+				5: {
+					example_pivot_field: 'value B',
+				},
 			},
-			5: {
-				example_pivot_field: "value B"
-			}
-		}, true);
+			true
+		);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({duplicates: 'true'});
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'true' });
 	});
 
 	test('detaching resources', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
@@ -109,18 +111,18 @@ describe('BelongsToMany tests', () => {
 	});
 
 	test('detaching resources with fields', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const detachResult = await belongsToManyRelation.detachWithFields({
 			2: {
-				example_pivot_field: 'value A'
+				example_pivot_field: 'value A',
 			},
 			5: {
-				example_pivot_field: "value B"
-			}
+				example_pivot_field: 'value B',
+			},
 		});
 
 		expect(detachResult).toBeInstanceOf(DetachResult);
@@ -128,7 +130,7 @@ describe('BelongsToMany tests', () => {
 	});
 
 	test('syncing resources', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
@@ -141,11 +143,11 @@ describe('BelongsToMany tests', () => {
 		expect(syncResult.detached).toStrictEqual([2, 5, 7]);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({detaching: 'true'});
+		expect(requests[0].queryParams).toStrictEqual({ detaching: 'true' });
 	});
 
 	test('syncing resources without detaching', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
@@ -153,22 +155,22 @@ describe('BelongsToMany tests', () => {
 		await belongsToManyRelation.sync([2, 5, 7], false);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({detaching: 'false'});
+		expect(requests[0].queryParams).toStrictEqual({ detaching: 'false' });
 	});
 
 	test('syncing resources with fields', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const syncResult = await belongsToManyRelation.syncWithFields({
 			2: {
-				example_pivot_field: 'value A'
+				example_pivot_field: 'value A',
 			},
 			5: {
-				example_pivot_field: "value B"
-			}
+				example_pivot_field: 'value B',
+			},
 		});
 
 		expect(syncResult).toBeInstanceOf(SyncResult);
@@ -177,30 +179,33 @@ describe('BelongsToMany tests', () => {
 		expect(syncResult.detached).toStrictEqual(['2', '5']);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({detaching: 'true'});
+		expect(requests[0].queryParams).toStrictEqual({ detaching: 'true' });
 	});
 
 	test('syncing resources with fields without detaching', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
-		await belongsToManyRelation.syncWithFields({
-			2: {
-				example_pivot_field: 'value A'
+		await belongsToManyRelation.syncWithFields(
+			{
+				2: {
+					example_pivot_field: 'value A',
+				},
+				5: {
+					example_pivot_field: 'value B',
+				},
 			},
-			5: {
-				example_pivot_field: "value B"
-			}
-		}, false);
+			false
+		);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({detaching: 'false'});
+		expect(requests[0].queryParams).toStrictEqual({ detaching: 'false' });
 	});
 
 	test('toggling resources', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
@@ -213,18 +218,18 @@ describe('BelongsToMany tests', () => {
 	});
 
 	test('toggling resources with fields', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
 		const toggleResult = await belongsToManyRelation.toggleWithFields({
 			2: {
-				example_pivot_field: 'value A'
+				example_pivot_field: 'value A',
 			},
 			5: {
-				example_pivot_field: "value B"
-			}
+				example_pivot_field: 'value B',
+			},
 		});
 
 		expect(toggleResult).toBeInstanceOf(ToggleResult);
@@ -233,16 +238,16 @@ describe('BelongsToMany tests', () => {
 	});
 
 	test('updating resource pivot', async () => {
-		const postEntity = server.schema.posts.create({title: 'Test Post'});
+		const postEntity = server.schema.posts.create({ title: 'Test Post' });
 
 		const post = new Post(postEntity.attrs);
 
 		const belongsToManyRelation = new BelongsToMany<Tag, TagPivot, TagAttributes>(Tag, post);
-		const updatePivotResult = await belongsToManyRelation.updatePivot(5, {example_pivot_field : 'value'});
+		const updatePivotResult = await belongsToManyRelation.updatePivot(5, {
+			example_pivot_field: 'value',
+		});
 
 		expect(updatePivotResult).toBeInstanceOf(UpdatePivotResult);
 		expect(updatePivotResult.updated).toStrictEqual(['5']);
 	});
 });
-
-

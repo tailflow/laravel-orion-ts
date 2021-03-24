@@ -1,4 +1,3 @@
 export class UpdatePivotResult {
-	constructor(public updated: Array<number | string>) {
-	}
+	constructor(public updated: Array<number | string>) {}
 }

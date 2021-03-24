@@ -1,7 +1,5 @@
-import {Model} from "../../../src/model";
+import { Model } from '../../../src/model';
 
 export default class User extends Model<{
-	name: string
-}> {
-
-}
+	name: string;
+}> {}

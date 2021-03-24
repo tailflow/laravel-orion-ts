@@ -1,28 +1,29 @@
-import {HttpMethod} from '../enums/httpMethod';
-import {Model} from '../../../model';
-import {ModelConstructor} from '../../../contracts/modelConstructor';
-import {Scope} from '../scope';
-import {Filter} from '../filter';
-import {FilterOperator} from '../enums/filterOperator';
-import {FilterType} from '../enums/filterType';
-import {Sorter} from '../sorter';
-import {SortDirection} from '../enums/sortDirection';
-import {UrlBuilder} from '../../../builders/urlBuilder';
-import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
-import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
-import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
-import {HttpClient} from '../../../httpClient';
-import {AxiosResponse} from 'axios';
-import {Orion} from '../../../orion';
-import {ExtractModelKeyType} from "../../../types/extractModelKeyType";
+import { HttpMethod } from '../enums/httpMethod';
+import { Model } from '../../../model';
+import { ModelConstructor } from '../../../contracts/modelConstructor';
+import { Scope } from '../scope';
+import { Filter } from '../filter';
+import { FilterOperator } from '../enums/filterOperator';
+import { FilterType } from '../enums/filterType';
+import { Sorter } from '../sorter';
+import { SortDirection } from '../enums/sortDirection';
+import { UrlBuilder } from '../../../builders/urlBuilder';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
+import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
+import { HttpClient } from '../../../httpClient';
+import { AxiosResponse } from 'axios';
+import { Orion } from '../../../orion';
+import { ExtractModelKeyType } from '../../../types/extractModelKeyType';
 
-export class QueryBuilder<M extends Model,
+export class QueryBuilder<
+	M extends Model,
 	Attributes = ExtractModelAttributesType<M>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<M>,
 	Relations = ExtractModelRelationsType<M>,
 	Key = ExtractModelKeyType<M>,
-	AllAttributes = Attributes & PersistedAttributes,
-	> {
+	AllAttributes = Attributes & PersistedAttributes
+> {
 	protected baseUrl: string;
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>;
 	protected httpClient: HttpClient;
@@ -54,7 +55,7 @@ export class QueryBuilder<M extends Model,
 		const response = await this.httpClient.request(
 			'/',
 			HttpMethod.GET,
-			this.prepareQueryParams({limit, page})
+			this.prepareQueryParams({ limit, page })
 		);
 
 		return response.data.data.map((attributes: AllAttributes & Relations) => {
@@ -66,12 +67,12 @@ export class QueryBuilder<M extends Model,
 		const response = await this.httpClient.request(
 			'/search',
 			HttpMethod.POST,
-			this.prepareQueryParams({limit, page}),
+			this.prepareQueryParams({ limit, page }),
 			{
 				scopes: this.scopes,
 				filters: this.filters,
-				search: {value: this.searchValue},
-				sort: this.sorters
+				search: { value: this.searchValue },
+				sort: this.sorters,
 			}
 		);
 
@@ -116,7 +117,7 @@ export class QueryBuilder<M extends Model,
 		const response = await this.httpClient.request(
 			`/${key}`,
 			HttpMethod.DELETE,
-			this.prepareQueryParams({force})
+			this.prepareQueryParams({ force })
 		);
 
 		return this.hydrate(response.data.data, response);

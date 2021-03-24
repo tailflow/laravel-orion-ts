@@ -1,10 +1,9 @@
-import {Orion} from "../../src/orion";
-import Post from "../stubs/models/post";
+import { Orion } from '../../src/orion';
+import Post from '../stubs/models/post';
 
 Orion.setHost('https://example.com/api');
 
 describe('Model tests', () => {
-
 	test('setting and getting key name', () => {
 		const model = new Post();
 		model.$setKeyName('custom_key');
@@ -22,5 +21,4 @@ describe('Model tests', () => {
 	test('getting resource name', () => {
 		expect(Post.prototype.$getResourceName()).toBe('posts');
 	});
-
 });

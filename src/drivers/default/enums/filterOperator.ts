@@ -8,5 +8,5 @@ export enum FilterOperator {
 	Like = 'like',
 	NotLike = 'not like',
 	In = 'in',
-	NotIn = 'not in'
+	NotIn = 'not in',
 }

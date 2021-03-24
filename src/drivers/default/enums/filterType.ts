@@ -1,4 +1,4 @@
 export enum FilterType {
 	And = 'and',
-	Or = 'or'
+	Or = 'or',
 }

@@ -1,15 +1,17 @@
-import {QueryBuilder} from './drivers/default/builders/queryBuilder';
+import { QueryBuilder } from './drivers/default/builders/queryBuilder';
 import pluralize from 'pluralize';
-import {noCase, snakeCase} from 'change-case';
-import {ModelConstructor} from './contracts/modelConstructor';
-import {AxiosResponse} from 'axios';
-import {DefaultPersistedAttributes} from "./types/defaultPersistedAttributes";
+import { noCase, snakeCase } from 'change-case';
+import { ModelConstructor } from './contracts/modelConstructor';
+import { AxiosResponse } from 'axios';
+import { DefaultPersistedAttributes } from './types/defaultPersistedAttributes';
 
-export abstract class Model<Attributes = Record<string, unknown>,
+export abstract class Model<
+	Attributes = Record<string, unknown>,
 	PersistedAttributes = Record<string, unknown> | DefaultPersistedAttributes,
 	Relations = Record<string, unknown>,
 	Key extends number | string = number | string,
-	AllAttributes = Attributes & PersistedAttributes> {
+	AllAttributes = Attributes & PersistedAttributes
+> {
 	public $attributes!: AllAttributes;
 	public $relations!: Relations;
 
@@ -38,10 +40,13 @@ export abstract class Model<Attributes = Record<string, unknown>,
 
 	public async $save<M extends Model>(attributes?: Attributes): Promise<this> {
 		if (attributes) {
-			this.$setAttributes(attributes as unknown as AllAttributes);
+			this.$setAttributes((attributes as unknown) as AllAttributes);
 		}
 
-		await this.$query().update(this.$getKey(), (attributes || this.$attributes) as Record<string, unknown>);
+		await this.$query().update(
+			this.$getKey(),
+			(attributes || this.$attributes) as Record<string, unknown>
+		);
 
 		return this;
 	}

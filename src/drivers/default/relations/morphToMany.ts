@@ -1,13 +1,13 @@
-import {Model} from '../../../model';
-import {BelongsToMany} from './belongsToMany';
-import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
-import {ExtractModelPersistedAttributesType} from '../../../types/extractModelPersistedAttributesType';
-import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
+import { Model } from '../../../model';
+import { BelongsToMany } from './belongsToMany';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
+import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
+import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
 
-export class MorphToMany<Relation extends Model,
+export class MorphToMany<
+	Relation extends Model,
 	Pivot = Record<string, unknown>,
 	Attributes = ExtractModelAttributesType<Relation>,
 	PersistedAttributes = ExtractModelPersistedAttributesType<Attributes>,
-	Relations = ExtractModelRelationsType<Relation>,
-	> extends BelongsToMany<Relation, Pivot, Attributes, PersistedAttributes, Relations> {
-}
+	Relations = ExtractModelRelationsType<Relation>
+> extends BelongsToMany<Relation, Pivot, Attributes, PersistedAttributes, Relations> {}

@@ -1,8 +1,7 @@
-import {Orion} from "../../src/orion";
-import {AuthDriver} from "../../src/drivers/default/enums/authDriver";
+import { Orion } from '../../src/orion';
+import { AuthDriver } from '../../src/drivers/default/enums/authDriver';
 
 describe('Orion tests', () => {
-
 	test('initialization', () => {
 		Orion.init('https://example.com', 'custom-prefix', AuthDriver.Passport, 'test-token');
 
@@ -49,5 +48,4 @@ describe('Orion tests', () => {
 
 		expect(Orion.getHost()).toBe('https://example.com/api/');
 	});
-
 });
