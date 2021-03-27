@@ -1,5 +1,6 @@
 import { Orion } from '../../src/orion';
 import { AuthDriver } from '../../src/drivers/default/enums/authDriver';
+import axios from 'axios';
 
 describe('Orion tests', () => {
 	test('initialization', () => {
@@ -47,5 +48,18 @@ describe('Orion tests', () => {
 		Orion.setHost('https://example.com/api');
 
 		expect(Orion.getHost()).toBe('https://example.com/api/');
+	});
+
+	test('making http client using user-provided callback', () => {
+		Orion.init('https://example.com', 'custom-prefix', AuthDriver.Passport, 'test-token');
+		Orion.makeHttpClientUsing(() => {
+			const client = axios.create();
+
+			client.defaults.baseURL = 'https://custom.com';
+
+			return client;
+		});
+
+		expect(Orion.makeHttpClient().getAxios().defaults.baseURL).toBe('https://custom.com');
 	});
 });
