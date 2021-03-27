@@ -1,4 +1,5 @@
 import { DefaultPersistedAttributes } from './defaultPersistedAttributes';
 
-export type DefaultSoftDeletablePersistedAttributes<T> = T &
-	DefaultPersistedAttributes & { deleted_at: string | null };
+export type DefaultSoftDeletablePersistedAttributes = DefaultPersistedAttributes & {
+	deleted_at: string | null;
+};
