@@ -24,7 +24,7 @@ export class BelongsToMany<
 		const response = await this.httpClient.request(
 			`/attach`,
 			HttpMethod.POST,
-			{ duplicates },
+			{ duplicates: duplicates ? 1 : 0 },
 			{
 				resources: keys,
 			}
@@ -40,7 +40,7 @@ export class BelongsToMany<
 		const response = await this.httpClient.request(
 			`/attach`,
 			HttpMethod.POST,
-			{ duplicates },
+			{ duplicates: duplicates ? 1 : 0 },
 			{ resources }
 		);
 
@@ -67,7 +67,7 @@ export class BelongsToMany<
 		const response = await this.httpClient.request(
 			`/sync`,
 			HttpMethod.PATCH,
-			{ detaching },
+			{ detaching: detaching ? 1 : 0 },
 			{
 				resources: keys,
 			}
@@ -83,7 +83,7 @@ export class BelongsToMany<
 		const response = await this.httpClient.request(
 			`/sync`,
 			HttpMethod.PATCH,
-			{ detaching },
+			{ detaching: detaching ? 1 : 0 },
 			{ resources }
 		);
 

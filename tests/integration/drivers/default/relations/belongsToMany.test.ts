@@ -39,7 +39,7 @@ describe('BelongsToMany tests', () => {
 		expect(attachResult.attached).toStrictEqual([2, 5, 7]);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'false' });
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: '0' });
 	});
 
 	test('attaching resources with duplicates', async () => {
@@ -51,7 +51,7 @@ describe('BelongsToMany tests', () => {
 		await belongsToManyRelation.attach([2, 5, 7], true);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'true' });
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: '1' });
 	});
 
 	test('attaching resources with fields', async () => {
@@ -73,7 +73,7 @@ describe('BelongsToMany tests', () => {
 		expect(attachResult.attached).toStrictEqual(['2', '5']);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'false' });
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: '0' });
 	});
 
 	test('attaching resources with fields with duplicates', async () => {
@@ -95,7 +95,7 @@ describe('BelongsToMany tests', () => {
 		);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ duplicates: 'true' });
+		expect(requests[0].queryParams).toStrictEqual({ duplicates: '1' });
 	});
 
 	test('detaching resources', async () => {
@@ -143,7 +143,7 @@ describe('BelongsToMany tests', () => {
 		expect(syncResult.detached).toStrictEqual([2, 5, 7]);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ detaching: 'true' });
+		expect(requests[0].queryParams).toStrictEqual({ detaching: '1' });
 	});
 
 	test('syncing resources without detaching', async () => {
@@ -155,7 +155,7 @@ describe('BelongsToMany tests', () => {
 		await belongsToManyRelation.sync([2, 5, 7], false);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ detaching: 'false' });
+		expect(requests[0].queryParams).toStrictEqual({ detaching: '0' });
 	});
 
 	test('syncing resources with fields', async () => {
@@ -179,7 +179,7 @@ describe('BelongsToMany tests', () => {
 		expect(syncResult.detached).toStrictEqual(['2', '5']);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ detaching: 'true' });
+		expect(requests[0].queryParams).toStrictEqual({ detaching: '1' });
 	});
 
 	test('syncing resources with fields without detaching', async () => {
@@ -201,7 +201,7 @@ describe('BelongsToMany tests', () => {
 		);
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ detaching: 'false' });
+		expect(requests[0].queryParams).toStrictEqual({ detaching: '0' });
 	});
 
 	test('toggling resources', async () => {
