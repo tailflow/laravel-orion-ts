@@ -28,7 +28,6 @@ export class HttpClient {
 			url,
 			method,
 			params,
-			withCredentials: Orion.getAuthDriver() === AuthDriver.Sanctum
 		});
 
 		if (method !== HttpMethod.GET) {
