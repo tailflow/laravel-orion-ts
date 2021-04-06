@@ -12,6 +12,10 @@ export default class Post extends Model<
 		user: User;
 	}
 > {
+	$resource(): string {
+		return 'posts';
+	}
+
 	public user(): BelongsTo<User> {
 		return new BelongsTo(User, this);
 	}

@@ -1,6 +1,4 @@
 import { QueryBuilder } from './drivers/default/builders/queryBuilder';
-import pluralize from 'pluralize';
-import { noCase, snakeCase } from 'change-case';
 import { ModelConstructor } from './contracts/modelConstructor';
 import { AxiosResponse } from 'axios';
 import { DefaultPersistedAttributes } from './types/defaultPersistedAttributes';
@@ -29,6 +27,8 @@ export abstract class Model<
 			this.$setRelations(this.$relations);
 		}
 	}
+
+	public abstract $resource(): string;
 
 	public static $query<M extends Model>(this: ModelConstructor<M>): QueryBuilder<M> {
 		return new QueryBuilder<M>(this);
@@ -97,11 +97,7 @@ export abstract class Model<
 		return this.$getKey() === model.$getKey();
 	}
 
-	public $getResourceName(): string {
-		return snakeCase(pluralize(noCase(this.constructor.name)));
-	}
-
-	protected $init() {
+	protected $init(): void {
 		if (!this.$attributes) {
 			this.$attributes = {} as AllAttributes;
 		}

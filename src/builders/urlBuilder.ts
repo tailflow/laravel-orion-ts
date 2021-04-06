@@ -14,7 +14,7 @@ export class UrlBuilder {
 		Relations = ExtractModelRelationsType<M>,
 		Key = ExtractModelKeyType<M>
 	>(model: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>): string {
-		return Orion.getApiUrl() + '/' + (model.prototype as M).$getResourceName();
+		return Orion.getApiUrl() + '/' + (model.prototype as M).$resource();
 	}
 
 	public static getResourceUrl<M extends Model>(model: Model): string {
@@ -35,9 +35,7 @@ export class UrlBuilder {
 		relationConstructor: ModelConstructor<R, Attributes, PersistedAttributes, Relations, Key>
 	): string {
 		return (
-			UrlBuilder.getResourceUrl(parent) +
-			'/' +
-			(relationConstructor.prototype as R).$getResourceName()
+			UrlBuilder.getResourceUrl(parent) + '/' + (relationConstructor.prototype as R).$resource()
 		);
 	}
 }

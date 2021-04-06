@@ -19,6 +19,6 @@ describe('Model tests', () => {
 	});
 
 	test('getting resource name', () => {
-		expect(Post.prototype.$getResourceName()).toBe('posts');
+		expect(Post.prototype.$resource()).toBe('posts');
 	});
 });
