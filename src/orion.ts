@@ -99,6 +99,18 @@ export class Orion {
 		return this;
 	}
 
+	public static async csrf(): Promise<void> {
+		if (this.authDriver !== AuthDriver.Sanctum) {
+			throw new Error(
+				`Current auth driver is set to "${this.authDriver}". Fetching CSRF cookie can only be used with "sanctum" driver.`
+			);
+		}
+
+		await Orion.makeHttpClient()
+			.getAxios()
+			.get(`sanctum/csrf-cookie`, { baseURL: Orion.getHost() });
+	}
+
 	protected static buildHttpClientConfig(): AxiosRequestConfig {
 		const config: AxiosRequestConfig = {
 			withCredentials: Orion.getAuthDriver() === AuthDriver.Sanctum,

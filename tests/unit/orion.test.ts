@@ -1,6 +1,7 @@
 import { Orion } from '../../src/orion';
 import { AuthDriver } from '../../src/drivers/default/enums/authDriver';
 import axios from 'axios';
+import { HttpMethod } from '../../src/drivers/default/enums/httpMethod';
 
 describe('Orion tests', () => {
 	test('initialization', () => {
