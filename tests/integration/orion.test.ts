@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 describe('Orion tests', () => {
-	test('fetching csrf cookie', async () => {
+	test('retrieving csrf cookie', async () => {
 		Orion.setAuthDriver(AuthDriver.Sanctum);
 
 		await Orion.csrf();

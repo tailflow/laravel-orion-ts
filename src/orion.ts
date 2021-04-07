@@ -106,9 +106,36 @@ export class Orion {
 			);
 		}
 
-		await Orion.makeHttpClient()
-			.getAxios()
-			.get(`sanctum/csrf-cookie`, { baseURL: Orion.getHost() });
+		const httpClient = Orion.makeHttpClient();
+		let response = null;
+
+		try {
+			response = await httpClient
+				.getAxios()
+				.get(`sanctum/csrf-cookie`, { baseURL: Orion.getHost() });
+		} catch (error) {
+			throw new Error(
+				`Unable to retrieve XSRF token cookie due to network error. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`
+			);
+		}
+
+		const xsrfTokenPresent =
+			document.cookie
+				.split(';')
+				.filter((cookie: string) =>
+					cookie.includes(httpClient.getAxios().defaults.xsrfCookieName || 'XSRF-TOKEN')
+				).length > 0;
+
+		if (!xsrfTokenPresent) {
+			console.log(`Response status: ${response.status}`);
+			console.log(`Response headers:`);
+			console.log(response.headers);
+			console.log(`Cookies: ${document.cookie}`);
+
+			throw new Error(
+				`XSRF token cookie is missing in the response. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`
+			);
+		}
 	}
 
 	protected static buildHttpClientConfig(): AxiosRequestConfig {

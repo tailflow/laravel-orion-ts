@@ -26,6 +26,9 @@ export default function makeServer() {
 			this.namespace = '';
 
 			this.get('/sanctum/csrf-cookie', () => {
+				const cookieExpiration = new Date(new Date().getTime() + 24 * 3600 * 1000);
+				document.cookie = `XSRF-TOKEN=test; path=/; expires=${cookieExpiration.toUTCString()};`;
+
 				return [];
 			});
 
