@@ -10,8 +10,10 @@
 		"sdk"
 	],
 	"files": [
-		"lib"
+		"dist"
 	],
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
 	"author": "Aleksei Zarubin alex@zarubin.co",
 	"repository": {
 		"type": "git",
@@ -19,8 +21,10 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"prebuild": "rimraf lib",
-		"build": "tsc",
+		"prebuild": "rimraf lib && rimraf dist",
+		"build": "npm run build:cjs && npm run build:esm",
+		"build:cjs": "tsc -p tsconfig-cjs.json",
+		"build:esm": "tsc",
 		"dev": "tsc -w",
 		"test": "jest",
 		"lint": "eslint . --ext .ts"
