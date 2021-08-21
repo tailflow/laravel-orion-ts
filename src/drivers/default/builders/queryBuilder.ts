@@ -53,7 +53,7 @@ export class QueryBuilder<
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
 		const response = await this.httpClient.request(
-			'/',
+			'',
 			HttpMethod.GET,
 			this.prepareQueryParams({ limit, page })
 		);
@@ -93,7 +93,7 @@ export class QueryBuilder<
 
 	public async store(attributes: Attributes): Promise<M> {
 		const response = await this.httpClient.request(
-			'/',
+			'',
 			HttpMethod.POST,
 			this.prepareQueryParams(),
 			attributes
