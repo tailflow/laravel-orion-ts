@@ -189,7 +189,11 @@ export class QueryBuilder<
 						return relationQueryBuilder.hydrate(rawRelation, response);
 					});
 				} else {
-					model.$relations[field] = relationQueryBuilder.hydrate(rawValue, response);
+					if(rawValue) {
+						model.$relations[field] = relationQueryBuilder.hydrate(rawValue, response);
+					} else {
+						model.$relations[field] = rawValue;
+					}
 				}
 			} else {
 				model.$attributes[field] = rawValue;
