@@ -17,15 +17,21 @@ export class HttpClient {
 		params: any = {},
 		data: any = {}
 	): Promise<AxiosResponse> {
+		const {headers, ...configParams} = params;
+
 		const config: AxiosRequestConfig = Object.assign(Orion.getHttpClientConfig(), {
 			baseURL: this.baseUrl,
 			url,
 			method,
-			params,
+			params: configParams,
 		});
 
 		if (method !== HttpMethod.GET) {
 			config.data = data;
+		}
+
+		if(headers) {
+			config.headers = headers;
 		}
 
 		return this.client.request(config);
