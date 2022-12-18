@@ -23,7 +23,7 @@ export class RelationQueryBuilder<
 			Relations,
 			Key
 		>,
-		parent: Model<any>
+		parent: Model
 	) {
 		super(relationConstructor);
 

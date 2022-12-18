@@ -52,7 +52,7 @@ export class QueryBuilder<
 	}
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: Array<AllAttributes & Relations>}>(
 			'',
 			HttpMethod.GET,
 			this.prepareQueryParams({ limit, page })
@@ -64,7 +64,7 @@ export class QueryBuilder<
 	}
 
 	public async search(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: Array<AllAttributes & Relations>}>(
 			'/search',
 			HttpMethod.POST,
 			this.prepareQueryParams({ limit, page }),
@@ -82,7 +82,7 @@ export class QueryBuilder<
 	}
 
 	public async find(key: Key): Promise<M> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
 			`/${key}`,
 			HttpMethod.GET,
 			this.prepareQueryParams()
@@ -92,29 +92,29 @@ export class QueryBuilder<
 	}
 
 	public async store(attributes: Attributes): Promise<M> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
 			'',
 			HttpMethod.POST,
 			this.prepareQueryParams(),
-			attributes
+			attributes as Record<string, unknown>
 		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async update(key: Key, attributes: Attributes): Promise<M> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
 			`/${key}`,
 			HttpMethod.PATCH,
 			this.prepareQueryParams(),
-			attributes
+			attributes as Record<string, unknown>
 		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async destroy(key: Key, force: boolean = false): Promise<M> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
 			`/${key}`,
 			HttpMethod.DELETE,
 			this.prepareQueryParams({ force })
@@ -124,7 +124,7 @@ export class QueryBuilder<
 	}
 
 	public async restore(key: Key): Promise<M> {
-		const response = await this.httpClient.request(
+		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
 			`/${key}/restore`,
 			HttpMethod.POST,
 			this.prepareQueryParams()
