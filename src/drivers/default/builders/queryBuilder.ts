@@ -1,20 +1,22 @@
-import { HttpMethod } from '../enums/httpMethod';
-import { Model } from '../../../model';
-import { ModelConstructor } from '../../../contracts/modelConstructor';
-import { Scope } from '../scope';
-import { Filter } from '../filter';
-import { FilterOperator } from '../enums/filterOperator';
-import { FilterType } from '../enums/filterType';
-import { Sorter } from '../sorter';
-import { SortDirection } from '../enums/sortDirection';
-import { UrlBuilder } from '../../../builders/urlBuilder';
-import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
-import { ExtractModelPersistedAttributesType } from '../../../types/extractModelPersistedAttributesType';
-import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
-import { HttpClient } from '../../../httpClient';
-import { AxiosResponse } from 'axios';
-import { Orion } from '../../../orion';
-import { ExtractModelKeyType } from '../../../types/extractModelKeyType';
+import {HttpMethod} from '../enums/httpMethod';
+import {Model} from '../../../model';
+import {ModelConstructor} from '../../../contracts/modelConstructor';
+import {Scope} from '../scope';
+import {Filter} from '../filter';
+import {FilterOperator} from '../enums/filterOperator';
+import {FilterType} from '../enums/filterType';
+import {Sorter} from '../sorter';
+import {SortDirection} from '../enums/sortDirection';
+import {UrlBuilder} from '../../../builders/urlBuilder';
+import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
+import {
+	ExtractModelPersistedAttributesType
+} from '../../../types/extractModelPersistedAttributesType';
+import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
+import {HttpClient} from '../../../httpClient';
+import {AxiosResponse} from 'axios';
+import {Orion} from '../../../orion';
+import {ExtractModelKeyType} from '../../../types/extractModelKeyType';
 
 export class QueryBuilder<
 	M extends Model,
@@ -52,10 +54,10 @@ export class QueryBuilder<
 	}
 
 	public async get(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.httpClient.request<{data: Array<AllAttributes & Relations>}>(
+		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			'',
 			HttpMethod.GET,
-			this.prepareQueryParams({ limit, page })
+			this.prepareQueryParams({limit, page})
 		);
 
 		return response.data.data.map((attributes: AllAttributes & Relations) => {
@@ -64,14 +66,14 @@ export class QueryBuilder<
 	}
 
 	public async search(limit: number = 15, page: number = 1): Promise<Array<M>> {
-		const response = await this.httpClient.request<{data: Array<AllAttributes & Relations>}>(
+		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			'/search',
 			HttpMethod.POST,
-			this.prepareQueryParams({ limit, page }),
+			this.prepareQueryParams({limit, page}),
 			{
 				scopes: this.scopes,
 				filters: this.filters,
-				search: { value: this.searchValue },
+				search: {value: this.searchValue},
 				sort: this.sorters,
 			}
 		);
@@ -82,7 +84,7 @@ export class QueryBuilder<
 	}
 
 	public async find(key: Key): Promise<M> {
-		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
+		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}`,
 			HttpMethod.GET,
 			this.prepareQueryParams()
@@ -92,7 +94,7 @@ export class QueryBuilder<
 	}
 
 	public async store(attributes: Attributes): Promise<M> {
-		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
+		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			'',
 			HttpMethod.POST,
 			this.prepareQueryParams(),
@@ -103,7 +105,7 @@ export class QueryBuilder<
 	}
 
 	public async update(key: Key, attributes: Attributes): Promise<M> {
-		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
+		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}`,
 			HttpMethod.PATCH,
 			this.prepareQueryParams(),
@@ -114,17 +116,17 @@ export class QueryBuilder<
 	}
 
 	public async destroy(key: Key, force: boolean = false): Promise<M> {
-		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
+		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}`,
 			HttpMethod.DELETE,
-			this.prepareQueryParams({ force })
+			this.prepareQueryParams({force})
 		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
 	public async restore(key: Key): Promise<M> {
-		const response = await this.httpClient.request<{data: AllAttributes & Relations}>(
+		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}/restore`,
 			HttpMethod.POST,
 			this.prepareQueryParams()
@@ -189,7 +191,7 @@ export class QueryBuilder<
 						return relationQueryBuilder.hydrate(rawRelation, response);
 					});
 				} else {
-					if(rawValue) {
+					if (rawValue) {
 						model.$relations[field] = relationQueryBuilder.hydrate(rawValue, response);
 					} else {
 						model.$relations[field] = rawValue;
@@ -203,6 +205,10 @@ export class QueryBuilder<
 		model.$response = response;
 
 		return model;
+	}
+
+	public getHttpClient(): HttpClient {
+		return this.httpClient;
 	}
 
 	protected prepareQueryParams(operationParams: any = {}): any {
