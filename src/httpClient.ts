@@ -72,7 +72,7 @@ export class HttpClient {
 		try {
 			response = await this
 				.getAxios()
-				.get(`sanctum/csrf-cookie`, {baseURL: Orion.getHost()});
+				.get(`sanctum/csrf-cookie`, {baseURL: Orion.getBaseUrl()});
 		} catch (error) {
 			throw new Error(
 				`Unable to retrieve XSRF token cookie due to network error. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`

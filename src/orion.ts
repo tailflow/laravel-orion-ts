@@ -1,9 +1,9 @@
-import { AuthDriver } from './drivers/default/enums/authDriver';
-import { HttpClient } from './httpClient';
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import {AuthDriver} from './drivers/default/enums/authDriver';
+import {HttpClient} from './httpClient';
+import axios, {AxiosInstance, AxiosRequestConfig} from 'axios';
 
 export class Orion {
-	protected static host: string;
+	protected static baseUrl: string;
 	protected static prefix: string;
 	protected static authDriver: AuthDriver;
 	protected static token: string | null = null;
@@ -12,12 +12,12 @@ export class Orion {
 	protected static makeHttpClientCallback: (() => AxiosInstance) | null = null;
 
 	public static init(
-		host: string,
+		baseUrl: string,
 		prefix: string = 'api',
 		authDriver: AuthDriver = AuthDriver.Default,
 		token?: string
 	): void {
-		Orion.setHost(host);
+		Orion.setBaseUrl(baseUrl);
 		if (token) {
 			Orion.setToken(token);
 		}
@@ -27,13 +27,13 @@ export class Orion {
 		this.httpClientConfig = Orion.buildHttpClientConfig();
 	}
 
-	public static setHost(apiUrl: string): Orion {
-		Orion.host = apiUrl;
+	public static setBaseUrl(baseUrl: string): Orion {
+		Orion.baseUrl = baseUrl;
 		return Orion;
 	}
 
-	public static getHost(): string {
-		return Orion.host.endsWith('/') ? Orion.host : `${Orion.host}/`;
+	public static getBaseUrl(): string {
+		return Orion.baseUrl.endsWith('/') ? Orion.baseUrl : `${Orion.baseUrl}/`;
 	}
 
 	public static setPrefix(prefix: string): Orion {
@@ -57,7 +57,7 @@ export class Orion {
 	}
 
 	public static getApiUrl(): string {
-		return Orion.getHost() + Orion.getPrefix();
+		return Orion.getBaseUrl() + Orion.getPrefix();
 	}
 
 	public static setToken(token: string): Orion {
@@ -85,12 +85,16 @@ export class Orion {
 		return Orion;
 	}
 
-	public static makeHttpClient(baseUrl?: string): HttpClient {
+	public static makeHttpClient(baseUrl?: string, withPrefix = true): HttpClient {
 		const client: AxiosInstance = this.makeHttpClientCallback
 			? this.makeHttpClientCallback()
 			: axios.create();
 
-		return new HttpClient(baseUrl || Orion.getApiUrl(), client, this.getAuthDriver());
+		if (!baseUrl) {
+			baseUrl = withPrefix ? Orion.getApiUrl() : Orion.getBaseUrl()
+		}
+
+		return new HttpClient(baseUrl, client, this.getAuthDriver());
 	}
 
 	public static makeHttpClientUsing(callback: () => AxiosInstance): Orion {

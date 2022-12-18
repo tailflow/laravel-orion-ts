@@ -7,16 +7,16 @@ describe('Orion tests', () => {
 	test('initialization', () => {
 		Orion.init('https://example.com', 'custom-prefix', AuthDriver.Passport, 'test-token');
 
-		expect(Orion.getHost()).toBe('https://example.com/');
+		expect(Orion.getBaseUrl()).toBe('https://example.com/');
 		expect(Orion.getPrefix()).toBe('custom-prefix');
 		expect(Orion.getAuthDriver()).toBe(AuthDriver.Passport);
 		expect(Orion.getToken()).toBe('test-token');
 	});
 
 	test('getting and setting host', () => {
-		Orion.setHost('https://example.com/');
+		Orion.setBaseUrl('https://example.com/');
 
-		expect(Orion.getHost()).toBe('https://example.com/');
+		expect(Orion.getBaseUrl()).toBe('https://example.com/');
 	});
 
 	test('getting and setting prefix', () => {
@@ -26,7 +26,7 @@ describe('Orion tests', () => {
 	});
 
 	test('getting api url', () => {
-		Orion.setHost('https://example.com/');
+		Orion.setBaseUrl('https://example.com/');
 		Orion.setPrefix('api');
 
 		expect(Orion.getApiUrl()).toBe('https://example.com/api');
@@ -46,9 +46,9 @@ describe('Orion tests', () => {
 	});
 
 	test('appending slash to the end when getting api url', () => {
-		Orion.setHost('https://example.com/api');
+		Orion.setBaseUrl('https://example.com/api');
 
-		expect(Orion.getHost()).toBe('https://example.com/api/');
+		expect(Orion.getBaseUrl()).toBe('https://example.com/api/');
 	});
 
 	test('making http client using user-provided callback', () => {
