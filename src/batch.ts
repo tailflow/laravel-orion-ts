@@ -2,12 +2,10 @@ import { HttpMethod } from "./drivers/default/enums/httpMethod";
 import { Model } from "./model";
 import { Orion } from "./orion";
 import { ExtractModelAttributesType } from "./types/extractModelAttributesType";
-import { ExtractModelAllAttributesType } from "./types/extractModelAllAttributesType";
 import { ExtractModelRelationsType } from "./types/extractModelRelationsType";
 import { ModelConstructor } from "./contracts/modelConstructor";
 import { QueryBuilder } from "./drivers/default/builders/queryBuilder";
 import { ExtractModelPersistedAttributesType } from "./types/extractModelPersistedAttributesType";
-import { ExtractModelKeyType } from "./types/extractModelKeyType";
 import { UrlBuilder } from "./builders/urlBuilder";
 
 type HydrateAttributes<M extends Model> = ExtractModelAttributesType<M> & ExtractModelPersistedAttributesType<M> & ExtractModelRelationsType<M>;
@@ -78,7 +76,7 @@ export class Batch
 		const data = {
 			resources: {}
 		};
-		items.forEach((v, i) => data.resources[v.$getKey()] = v.$attributes);
+		items.forEach((v) => data.resources[v.$getKey()] = v.$attributes);
 
 		const response = await client.request<{ data: Array< AllAttributes & Relations > }>(
 			`${url}/batch`,
@@ -177,7 +175,7 @@ export class Batch
 		let foundUrl: string | undefined = undefined;
 		let isModel = false;
 
-		let ids = items.map((x: number | M) => {
+		const ids = items.map((x: number | M) => {
 			// also find the url while we're at it
 			if (typeof (x) == 'object' && x.$resource() && foundUrl == undefined) {
 				foundUrl = x.$resource();
