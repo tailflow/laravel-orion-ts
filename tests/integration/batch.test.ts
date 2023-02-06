@@ -7,7 +7,6 @@ let server: any;
 
 beforeEach(() => {
 	server = makeServer();
-	Orion.setBaseUrl("https://api-mock.test/api")
 });
 
 afterEach(() => {

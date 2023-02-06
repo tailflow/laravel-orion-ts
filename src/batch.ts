@@ -18,7 +18,7 @@ export class Batch
 	) {
 		let baseUrl = ''
 		if (Orion.getBaseUrl()) {
-			baseUrl = Orion.getBaseUrl();
+			baseUrl = Orion.getApiUrl();
 		} else {
 			baseUrl = UrlBuilder.getResourceBaseUrl(modelConstructor);
 		}
