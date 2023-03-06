@@ -145,16 +145,16 @@ export default function makeServer() {
 
 			this.patch('/api/posts/batch', (schema: any, request) => {
 				const body: {
-					resources: object
+					resources: Record<string, unknown>
 				} = JSON.parse(request.requestBody);
 
 				const rval: any[] = [];
 				for (const key in body.resources) {
 					const attrs = body.resources[key];
-	
+
 					const post = schema.posts.find(key);
 
-	
+
 					rval.push(post.update(attrs));
 				}
 
