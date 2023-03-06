@@ -104,6 +104,23 @@ export class QueryBuilder<
 		return this.hydrate(response.data.data, response);
 	}
 
+	public async batchStore(items: M[]): Promise<M[]> {
+		const data = {
+			resources: items.map(x => x.$attributes)
+		};
+
+		const response = await this.httpClient.request<{data: Array<AllAttributes & Relations> }>(
+			`/batch`,
+			HttpMethod.POST,
+			null,
+			data
+		);
+
+		return response.data.data.map((attributes) => {
+			return this.hydrate(attributes, response);
+		})
+	}
+
 	public async update(key: Key, attributes: Attributes): Promise<M> {
 		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}`,
@@ -113,6 +130,24 @@ export class QueryBuilder<
 		);
 
 		return this.hydrate(response.data.data, response);
+	}
+
+	public async batchUpdate(items: M[]): Promise<M[]> {
+		const data = {
+			resources: {}
+		};
+		items.forEach((v) => data.resources[v.$getKey()] = v.$attributes);
+
+		const response = await this.httpClient.request<{ data: Array< AllAttributes & Relations > }>(
+			`batch`,
+			HttpMethod.PATCH,
+			null,
+			data
+		)
+
+		return response.data.data.map((attributes: AllAttributes & Relations) => {
+			return this.hydrate(attributes, response);
+		});
 	}
 
 	public async destroy(key: Key, force: boolean = false): Promise<M> {
@@ -125,6 +160,27 @@ export class QueryBuilder<
 		return this.hydrate(response.data.data, response);
 	}
 
+	public async batchDelete(items: Key[]): Promise<M[]>
+	{
+		if (!items.length)
+			return [];
+
+		const data = {
+			resources: items
+		};
+
+		const response = await this.httpClient.request<{ data: Array< AllAttributes & Relations > }>(
+			`/batch`,
+			HttpMethod.DELETE,
+			null,
+			data
+		);
+
+		return response.data.data.map((attributes: AllAttributes & Relations) => {
+			return this.hydrate(attributes, response);
+		});
+	}
+
 	public async restore(key: Key): Promise<M> {
 		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}/restore`,
@@ -134,6 +190,24 @@ export class QueryBuilder<
 
 		return this.hydrate(response.data.data, response);
 	}
+
+	public async batchRestore(items: Key[]): Promise<M[]> {
+		const data = {
+			resources: items
+		};
+
+		const response = await this.httpClient.request<{ data: Array< AllAttributes & Relations > }>(
+			`/batch/restore`,
+			HttpMethod.POST,
+			null,
+			data
+		);
+
+		return response.data.data.map((attributes: AllAttributes & Relations) => {
+			return this.hydrate(attributes, response);
+		});
+	}
+
 
 	public with(relations: string[]): this {
 		this.includes = relations;

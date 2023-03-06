@@ -129,6 +129,74 @@ export default function makeServer() {
 					updated: [request.params.tag_id],
 				};
 			});
+
+			this.post('/api/posts/batch', (schema: any, request) => {
+				const body: {
+					resources: any[]
+				} = JSON.parse(request.requestBody);
+
+				const rval: any[] = [];
+				for (let i = 0; i < body.resources.length; i++) {
+					rval.push(schema.posts.create(body.resources[i]));
+				}
+
+				return {data: rval};
+			})
+
+			this.patch('/api/posts/batch', (schema: any, request) => {
+				const body: {
+					resources: object
+				} = JSON.parse(request.requestBody);
+
+				const rval: any[] = [];
+				for (const key in body.resources) {
+					const attrs = body.resources[key];
+	
+					const post = schema.posts.find(key);
+
+	
+					rval.push(post.update(attrs));
+				}
+
+				return {data: rval};
+			})
+
+			this.delete('/api/posts/batch', (schema: any, request) => {
+				const body: {
+					resources: number[]
+				} = JSON.parse(request.requestBody);
+
+				const rval: any[] = [];
+				for (let i = 0; i < body.resources.length; i++) {
+					const id = body.resources[i];
+					const post = schema.posts.find(id);
+
+					post.update({ deleted_at: '2021-01-01' });
+
+					rval.push(post);
+				}
+
+				return {data: rval};
+			})
+
+			this.post('/api/posts/batch/restore', (schema: any, request) => {
+				const body: {
+					resources: number[]
+				} = JSON.parse(request.requestBody);
+
+				const rval: any[] = [];
+
+				for (let i = 0; i < body.resources.length; i++) {
+					const id = body.resources[i];
+					const post = schema.posts.find(id);
+
+					post.update({ deleted_at: null });
+
+					rval.push(post);
+				}
+
+				return {data: rval};
+			})
 		},
 	});
 }
