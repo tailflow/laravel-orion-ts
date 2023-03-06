@@ -68,9 +68,9 @@ describe('Batch tests', () => {
 		posts[1].$attributes.title = "Second";
 		posts[2].$attributes.title = "Third";
 
-		let res = await Post.$query().batchStore(posts);
+		const res = await Post.$query().batchStore(posts);
 
-		let ModelDelete = await Post.$query().batchDelete([res[1].$getKey(), res[2].$getKey()]);
+		const ModelDelete = await Post.$query().batchDelete([res[1].$getKey(), res[2].$getKey()]);
 
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeUndefined();
 		expect(server.schema.posts.find('2').attrs.deleted_at).toBeDefined();
@@ -94,7 +94,7 @@ describe('Batch tests', () => {
 		let res = await Post.$query().batchStore(posts);
 
 		// delete ID 2 & 3
-		let ModelDelete = await Post.$query().batchDelete([res[1].$getKey(), res[2].$getKey()]);
+		const ModelDelete = await Post.$query().batchDelete([res[1].$getKey(), res[2].$getKey()]);
 
 		res = await Post.$query().batchRestore(ModelDelete.map(x => x.$getKey()));
 
