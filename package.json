@@ -1,6 +1,6 @@
 {
 	"name": "@tailflow/laravel-orion",
-	"version": "3.4.0",
+	"version": "4.0.0",
 	"description": "Typescript SDK for Laravel Orion",
 	"keywords": [
 		"laravel orion",
