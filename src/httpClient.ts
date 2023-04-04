@@ -1,15 +1,11 @@
 import {HttpMethod} from './drivers/default/enums/httpMethod';
 import {Orion} from './orion';
 import {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {AuthDriver} from "./drivers/default/enums/authDriver";
 
 export class HttpClient {
-	protected static csrfTokenFetched = false;
-
-	constructor(protected baseUrl: string, protected client: AxiosInstance, protected authDriver: AuthDriver) {
+	constructor(protected baseUrl: string, protected client: AxiosInstance) {
 		this.baseUrl = baseUrl;
 		this.client = client;
-		this.authDriver = authDriver;
 	}
 
 	public async request<Response extends Record<string, unknown>>(
@@ -27,10 +23,6 @@ export class HttpClient {
 
 		if (method !== HttpMethod.GET) {
 			config.data = data;
-
-			if (!HttpClient.csrfTokenFetched && this.authDriver === AuthDriver.Sanctum) {
-				await this.fetchCsrfToken();
-			}
 		}
 
 		return this.client.request<Response>(config);
@@ -58,44 +50,6 @@ export class HttpClient {
 		return this.request<Response>(
 			url, HttpMethod.DELETE, params
 		)
-	}
-
-	public async fetchCsrfToken(): Promise<void> {
-		if (this.authDriver !== AuthDriver.Sanctum) {
-			throw new Error(
-				`Current auth driver is set to "${this.authDriver}". Fetching CSRF cookie can only be used with "sanctum" driver.`
-			);
-		}
-
-		let response = null;
-
-		try {
-			response = await this
-				.getAxios()
-				.get(`sanctum/csrf-cookie`, {baseURL: Orion.getBaseUrl()});
-		} catch (error) {
-			throw new Error(
-				`Unable to retrieve XSRF token cookie due to network error. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`
-			);
-		}
-
-		const xsrfTokenPresent =
-			document.cookie
-				.split(';')
-				.filter((cookie: string) =>
-					cookie.includes(this.getAxios().defaults.xsrfCookieName || 'XSRF-TOKEN')
-				).length > 0;
-
-		if (!xsrfTokenPresent) {
-			console.log(`Response status: ${response.status}`);
-			console.log(`Response headers:`);
-			console.log(response.headers);
-			console.log(`Cookies: ${document.cookie}`);
-
-			throw new Error(
-				`XSRF token cookie is missing in the response. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`
-			);
-		}
 	}
 
 	public getAxios(): AxiosInstance {

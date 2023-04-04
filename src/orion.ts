@@ -94,7 +94,7 @@ export class Orion {
 			baseUrl = withPrefix ? Orion.getApiUrl() : Orion.getBaseUrl()
 		}
 
-		return new HttpClient(baseUrl, client, this.getAuthDriver());
+		return new HttpClient(baseUrl, client);
 	}
 
 	public static makeHttpClientUsing(callback: () => AxiosInstance): Orion {
@@ -115,5 +115,44 @@ export class Orion {
 		}
 
 		return config;
+	}
+
+	public static async csrf(): Promise<void> {
+		if (this.authDriver !== AuthDriver.Sanctum) {
+			throw new Error(
+				`Current auth driver is set to "${this.authDriver}". Fetching CSRF cookie can only be used with "sanctum" driver.`
+			);
+		}
+
+		const httpClient = Orion.makeHttpClient();
+		let response = null;
+
+		try {
+			response = await httpClient
+				.getAxios()
+				.get(`sanctum/csrf-cookie`, { baseURL: Orion.getBaseUrl() });
+		} catch (error) {
+			throw new Error(
+				`Unable to retrieve XSRF token cookie due to network error. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`
+			);
+		}
+
+		const xsrfTokenPresent =
+			document.cookie
+				.split(';')
+				.filter((cookie: string) =>
+					cookie.includes(httpClient.getAxios().defaults.xsrfCookieName || 'XSRF-TOKEN')
+				).length > 0;
+
+		if (!xsrfTokenPresent) {
+			console.log(`Response status: ${response.status}`);
+			console.log(`Response headers:`);
+			console.log(response.headers);
+			console.log(`Cookies: ${document.cookie}`);
+
+			throw new Error(
+				`XSRF token cookie is missing in the response. Please ensure that SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN environment variables are configured correctly on the API side.`
+			);
+		}
 	}
 }
