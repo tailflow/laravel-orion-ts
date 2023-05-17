@@ -30,6 +30,7 @@ export class QueryBuilder<
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>;
 	protected httpClient: HttpClient;
 
+	protected fields: string[] = [];
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
 	protected fetchOnlyTrashed: boolean = false;
@@ -208,6 +209,11 @@ export class QueryBuilder<
 		});
 	}
 
+	public fields(fieldNames: string[]): this {
+		this.fields = fieldNames;
+
+		return this;
+	}
 
 	public with(relations: string[]): this {
 		this.includes = relations;
@@ -292,6 +298,10 @@ export class QueryBuilder<
 
 		if (this.fetchTrashed) {
 			operationParams.with_trashed = true;
+		}
+		
+		if (this.fields.length > 0) {
+			operationParams.fields = this.fields.join(',');
 		}
 
 		if (this.includes.length > 0) {
