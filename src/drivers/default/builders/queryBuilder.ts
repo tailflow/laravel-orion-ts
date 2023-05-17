@@ -30,7 +30,7 @@ export class QueryBuilder<
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>;
 	protected httpClient: HttpClient;
 
-	protected fields: string[] = [];
+	protected fields: {[resource: string]: string[]} = {};
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
 	protected fetchOnlyTrashed: boolean = false;
@@ -209,10 +209,10 @@ export class QueryBuilder<
 		});
 	}
 
-	public fields(fieldNames: string[]): this {
-		this.fields = fieldNames;
+	public fields(resourceFields: {[resource: string]: string[]}): this {
+    this.fields = resourceFields;
 
-		return this;
+    return this;
 	}
 
 	public with(relations: string[]): this {
@@ -292,22 +292,25 @@ export class QueryBuilder<
 	}
 
 	protected prepareQueryParams(operationParams: any = {}): any {
-		if (this.fetchOnlyTrashed) {
-			operationParams.only_trashed = true;
-		}
+    if (this.fetchOnlyTrashed) {
+        operationParams.only_trashed = true;
+    }
 
-		if (this.fetchTrashed) {
-			operationParams.with_trashed = true;
-		}
-		
-		if (this.fields.length > 0) {
-			operationParams.fields = this.fields.join(',');
-		}
+    if (this.fetchTrashed) {
+        operationParams.with_trashed = true;
+    }
+    
+    if (Object.keys(this.fields).length > 0) {
+        operationParams.fields = {};
+        for (const resource in this.fields) {
+            operationParams.fields[resource] = this.fields[resource].join(',');
+        }
+    }
 
-		if (this.includes.length > 0) {
-			operationParams.include = this.includes.join(',');
-		}
+    if (this.includes.length > 0) {
+        operationParams.include = this.includes.join(',');
+    }
 
-		return operationParams;
+    return operationParams;
 	}
 }
