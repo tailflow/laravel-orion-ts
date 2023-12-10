@@ -17,6 +17,7 @@ import {HttpClient} from '../../../httpClient';
 import {AxiosResponse} from 'axios';
 import {Orion} from '../../../orion';
 import {ExtractModelKeyType} from '../../../types/extractModelKeyType';
+import { AggregateItem } from '../../../types/AggregateItem';
 
 export class QueryBuilder<
 	M extends Model,
@@ -33,6 +34,12 @@ export class QueryBuilder<
 	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
 	protected fetchOnlyTrashed: boolean = false;
+	protected withCountRelations: string[] = [];
+	protected withExistsRelations: string[] = [];
+	protected withAvgRelations: AggregateItem<Relations>[] = [];
+	protected withSumRelations: AggregateItem<Relations>[] = [];
+	protected withMinRelations: AggregateItem<Relations>[] = [];
+	protected withMaxRelations: AggregateItem<Relations>[] = [];
 
 	protected scopes: Array<Scope> = [];
 	protected filters: Array<Filter> = [];
@@ -281,6 +288,101 @@ export class QueryBuilder<
 		return model;
 	}
 
+	/**
+	 * Include the count of the specified relations.
+	 * The relations need to be whitelisted in the controller.
+	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
+	 */
+	public withCount(relations: string[] | string): this {
+		if (!Array.isArray(relations)) {
+			relations = [relations];
+		}
+
+		this.withCountRelations.push(...relations);
+
+		return this
+	}
+
+	/**
+	 * Include the exists of the specified relations.
+	 * The relations need to be whitelisted in the controller.
+	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
+	 * @param relations
+	 */
+	public withExists(relations: string[] | string): this {
+		if (!Array.isArray(relations)) {
+			relations = [relations];
+		}
+
+		this.withExistsRelations.push(...relations);
+
+		return this
+	}
+
+	/**
+	 * Include the avg of the specified relations.
+	 * The relations need to be whitelisted in the controller.
+	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
+	 * @param relations
+	 */
+	public withAvg(relations: AggregateItem<Relations>[] | AggregateItem<Relations>): this {
+		if (!Array.isArray(relations)) {
+			relations = [relations];
+		}
+
+		this.withAvgRelations.push(...relations);
+
+		return this
+	}
+
+	/**
+	 * Include the sum of the specified relations.
+	 * The relations need to be whitelisted in the controller.
+	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
+	 * @param relations
+	 */
+	public withSum(relations: AggregateItem<Relations>[] | AggregateItem<Relations>): this {
+		if (!Array.isArray(relations)) {
+			relations = [relations];
+		}
+
+		this.withSumRelations.push(...relations);
+
+		return this
+	}
+
+	/**
+	 * Include the min of the specified relations.
+	 * The relations need to be whitelisted in the controller.
+	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
+	 * @param relations
+	 */
+	public withMin(relations: AggregateItem<Relations>[] | AggregateItem<Relations>): this {
+		if (!Array.isArray(relations)) {
+			relations = [relations];
+		}
+
+		this.withMinRelations.push(...relations);
+
+		return this
+	}
+
+	/**
+	 * Include the max of the specified relations.
+	 * The relations need to be whitelisted in the controller.
+	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
+	 * @param relations
+	 */
+	public withMax(relations: AggregateItem<Relations>[] | AggregateItem<Relations>): this {
+		if (!Array.isArray(relations)) {
+			relations = [relations];
+		}
+
+		this.withMaxRelations.push(...relations);
+
+		return this
+	}
+
 	public getHttpClient(): HttpClient {
 		return this.httpClient;
 	}
@@ -297,6 +399,39 @@ export class QueryBuilder<
 		if (this.includes.length > 0) {
 			operationParams.include = this.includes.join(',');
 		}
+
+		if (this.withCountRelations.length > 0) {
+			operationParams.with_count = this.withCountRelations.join(',');
+		}
+
+		if (this.withExistsRelations.length > 0) {
+			operationParams.with_exists = this.withExistsRelations.join(',');
+		}
+
+		if (this.withAvgRelations.length > 0) {
+			operationParams.with_avg = this.withAvgRelations.map((item) => {
+				return `${item.relation}.${item.column}`;
+			}).join(',');
+		}
+
+		if (this.withSumRelations.length > 0) {
+			operationParams.with_sum = this.withSumRelations.map((item) => {
+				return `${item.relation}.${item.column}`;
+			}).join(',');
+		}
+
+		if (this.withMinRelations.length > 0) {
+			operationParams.with_min = this.withMinRelations.map((item) => {
+				return `${item.relation}.${item.column}`;
+			}).join(',');
+		}
+
+		if (this.withMaxRelations.length > 0) {
+			operationParams.with_max = this.withMaxRelations.map((item) => {
+				return `${item.relation}.${item.column}`;
+			}).join(',');
+		}
+
 
 		return operationParams;
 	}
