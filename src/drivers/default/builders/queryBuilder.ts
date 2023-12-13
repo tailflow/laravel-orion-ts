@@ -254,7 +254,7 @@ export class QueryBuilder<
 	public hydrate(raw: AllAttributes & Relations, response?: AxiosResponse): M {
 		const model = new this.modelConstructor();
 
-		for (const field of Object.keys(raw)) {
+		for (const field of Object.keys(raw as Record<string, unknown>)) {
 			const rawValue = raw[field];
 
 			if (typeof model[field] === 'function') {
