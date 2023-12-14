@@ -60,12 +60,47 @@ describe('QueryBuilder tests', () => {
 	test('retrieving a paginated list resources with included relations', async () => {
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		await queryBuilder.with(['user', 'profile']).get();
+		const requests = server.pretender.handledRequests;
+		expect(requests[0].queryParams).toStrictEqual({
+			limit: '15',
+			page: '1',
+			include: 'user,profile'
+		});
+	});
+
+	test('retrieving a paginated list resources with included aggregates', async () => {
+		const queryBuilder = new QueryBuilder<Post>(Post);
+		await queryBuilder
+			.withAvg({
+				column: 'id',
+				relation: 'tags'
+			})
+			.withMin({
+				column: 'id',
+				relation: 'tags'
+			})
+			.withMax({
+				column: 'id',
+				relation: 'tags'
+			})
+			.withSum({
+				column: 'id',
+				relation: 'tags'
+			})
+			.withCount('tags')
+			.withExists('tags')
+			.get();
 
 		const requests = server.pretender.handledRequests;
 		expect(requests[0].queryParams).toStrictEqual({
 			limit: '15',
 			page: '1',
-			include: 'user,profile',
+			with_avg: 'tags.id',
+			with_min: 'tags.id',
+			with_max: 'tags.id',
+			with_sum: 'tags.id',
+			with_count: 'tags',
+			with_exists: 'tags'
 		});
 	});
 
@@ -96,11 +131,11 @@ describe('QueryBuilder tests', () => {
 					field: 'test field',
 					operator: FilterOperator.GreaterThanOrEqual,
 					value: 'test value',
-					type: FilterType.Or,
-				},
+					type: FilterType.Or
+				}
 			],
 			search: { value: 'test keyword' },
-			sort: [{ field: 'test field', direction: SortDirection.Desc }],
+			sort: [{ field: 'test field', direction: SortDirection.Desc }]
 		};
 		expect(JSON.parse(requests[0].requestBody)).toStrictEqual(searchParameters);
 	});
@@ -129,14 +164,14 @@ describe('QueryBuilder tests', () => {
 		expect(requests[0].queryParams).toStrictEqual({
 			limit: '15',
 			page: '1',
-			include: 'user,profile',
+			include: 'user,profile'
 		});
 	});
 
 	test('storing a resource', async () => {
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		const post = await queryBuilder.store({
-			title: 'Test Post',
+			title: 'Test Post'
 		});
 
 		expect(post).toBeInstanceOf(Post);
@@ -147,7 +182,7 @@ describe('QueryBuilder tests', () => {
 	test('storing a resource and getting its relations', async () => {
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		const post = await queryBuilder.with(['user', 'profile']).store({
-			title: 'Test Post',
+			title: 'Test Post'
 		});
 
 		expect(post).toBeInstanceOf(Post);
@@ -196,7 +231,7 @@ describe('QueryBuilder tests', () => {
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		const post = await queryBuilder.update('1', {
-			title: 'Updated Post',
+			title: 'Updated Post'
 		});
 
 		expect(post).toBeInstanceOf(Post);
@@ -209,7 +244,7 @@ describe('QueryBuilder tests', () => {
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		const post = await queryBuilder.with(['user', 'profile']).update('1', {
-			title: 'Updated Post',
+			title: 'Updated Post'
 		});
 
 		expect(post).toBeInstanceOf(Post);
@@ -225,7 +260,7 @@ describe('QueryBuilder tests', () => {
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
 		const post = await queryBuilder.withTrashed().update('1', {
-			title: 'Updated Post',
+			title: 'Updated Post'
 		});
 
 		expect(post).toBeInstanceOf(Post);
@@ -246,7 +281,7 @@ describe('QueryBuilder tests', () => {
 		expect(post.$attributes).toStrictEqual({
 			id: '1',
 			title: 'Test Post',
-			deleted_at: '2021-01-01',
+			deleted_at: '2021-01-01'
 		});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
 	});
@@ -261,7 +296,7 @@ describe('QueryBuilder tests', () => {
 		expect(post.$attributes).toStrictEqual({
 			id: '1',
 			title: 'Test Post',
-			deleted_at: '2021-01-01',
+			deleted_at: '2021-01-01'
 		});
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
 
@@ -319,8 +354,8 @@ describe('QueryBuilder tests', () => {
 				id: 1,
 				name: 'Test User',
 				updated_at: '2021-02-01',
-				created_at: '2021-02-01',
-			} as unknown) as User,
+				created_at: '2021-02-01'
+			} as unknown) as User
 		});
 
 		expect(post).toBeInstanceOf(Post);
@@ -328,14 +363,14 @@ describe('QueryBuilder tests', () => {
 			id: 1,
 			title: 'test',
 			updated_at: '2021-02-01',
-			created_at: '2021-02-01',
+			created_at: '2021-02-01'
 		});
 		expect(post.$relations.user).toBeInstanceOf(User);
 		expect(post.$relations.user.$attributes).toStrictEqual({
 			id: 1,
 			name: 'Test User',
 			updated_at: '2021-02-01',
-			created_at: '2021-02-01',
+			created_at: '2021-02-01'
 		});
 	});
 });
