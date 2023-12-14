@@ -1,4 +1,4 @@
 export type AggregateItem<Relations> = {
-	relation: Relations;
+	relation: keyof Relations;
 	column: string;
 }
