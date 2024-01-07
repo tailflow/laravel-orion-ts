@@ -29,7 +29,8 @@ describe('Orion tests', () => {
 			await Orion.csrf();
 			expect(false).toBeTruthy();
 		} catch (error) {
-			expect(error.message).toBe(
+
+			expect((error as Error).message).toBe(
 				`Current auth driver is set to "${AuthDriver.Passport}". Fetching CSRF cookie can only be used with "sanctum" driver.`
 			);
 		}

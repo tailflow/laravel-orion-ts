@@ -59,12 +59,12 @@ describe('QueryBuilder tests', () => {
 
 	test('retrieving a paginated list resources with included relations', async () => {
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		await queryBuilder.with(['user', 'profile']).get();
+		await queryBuilder.with(['user']).get();
 		const requests = server.pretender.handledRequests;
 		expect(requests[0].queryParams).toStrictEqual({
 			limit: '15',
 			page: '1',
-			include: 'user,profile'
+			include: 'user'
 		});
 	});
 
@@ -158,13 +158,13 @@ describe('QueryBuilder tests', () => {
 
 	test('searching for resources with included relations', async () => {
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		await queryBuilder.with(['user', 'profile']).search();
+		await queryBuilder.with(['user']).search();
 
 		const requests = server.pretender.handledRequests;
 		expect(requests[0].queryParams).toStrictEqual({
 			limit: '15',
 			page: '1',
-			include: 'user,profile'
+			include: 'user'
 		});
 	});
 
@@ -181,7 +181,7 @@ describe('QueryBuilder tests', () => {
 
 	test('storing a resource and getting its relations', async () => {
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		const post = await queryBuilder.with(['user', 'profile']).store({
+		const post = await queryBuilder.with(['user']).store({
 			title: 'Test Post'
 		});
 
@@ -190,7 +190,7 @@ describe('QueryBuilder tests', () => {
 		expect(server.schema.posts.find('1').attrs.title).toBe('Test Post');
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ include: 'user,profile' });
+		expect(requests[0].queryParams).toStrictEqual({ include: 'user' });
 	});
 
 	test('retrieving a resource', async () => {
@@ -217,13 +217,13 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({ title: 'Test Post' });
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		const post = await queryBuilder.with(['user', 'profile']).find('1');
+		const post = await queryBuilder.with(['user']).find('1');
 
 		expect(post).toBeInstanceOf(Post);
 		expect(post.$attributes).toStrictEqual({ id: '1', title: 'Test Post' });
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ include: 'user,profile' });
+		expect(requests[0].queryParams).toStrictEqual({ include: 'user' });
 	});
 
 	test('updating a resource', async () => {
@@ -243,7 +243,7 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({ title: 'Test Post' });
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		const post = await queryBuilder.with(['user', 'profile']).update('1', {
+		const post = await queryBuilder.with(['user']).update('1', {
 			title: 'Updated Post'
 		});
 
@@ -252,7 +252,7 @@ describe('QueryBuilder tests', () => {
 		expect(server.schema.posts.find('1').attrs.title).toBe('Updated Post');
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ include: 'user,profile' });
+		expect(requests[0].queryParams).toStrictEqual({ include: 'user' });
 	});
 
 	test('updating a soft deleted resource', async () => {
@@ -290,7 +290,7 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({ title: 'Test Post' });
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		const post = await queryBuilder.with(['user', 'profile']).destroy('1');
+		const post = await queryBuilder.with(['user']).destroy('1');
 
 		expect(post).toBeInstanceOf(Post);
 		expect(post.$attributes).toStrictEqual({
@@ -301,7 +301,7 @@ describe('QueryBuilder tests', () => {
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeDefined();
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ force: 'false', include: 'user,profile' });
+		expect(requests[0].queryParams).toStrictEqual({ force: 'false', include: 'user' });
 	});
 
 	test('restoring a resource', async () => {
@@ -319,14 +319,14 @@ describe('QueryBuilder tests', () => {
 		server.schema.posts.create({ title: 'Test Post', deleted_at: Date.now() });
 
 		const queryBuilder = new QueryBuilder<Post, PostAttributes>(Post);
-		const post = await queryBuilder.with(['user', 'profile']).restore('1');
+		const post = await queryBuilder.with(['user']).restore('1');
 
 		expect(post).toBeInstanceOf(Post);
 		expect(post.$attributes).toStrictEqual({ id: '1', title: 'Test Post', deleted_at: null });
 		expect(server.schema.posts.find('1').attrs.deleted_at).toBeNull();
 
 		const requests = server.pretender.handledRequests;
-		expect(requests[0].queryParams).toStrictEqual({ include: 'user,profile' });
+		expect(requests[0].queryParams).toStrictEqual({ include: 'user' });
 	});
 
 	test('force deleting a resource', async () => {

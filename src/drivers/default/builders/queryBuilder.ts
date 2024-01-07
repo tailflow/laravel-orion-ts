@@ -1,23 +1,24 @@
-import {HttpMethod} from '../enums/httpMethod';
-import {Model} from '../../../model';
-import {ModelConstructor} from '../../../contracts/modelConstructor';
-import {Scope} from '../scope';
-import {Filter} from '../filter';
-import {FilterOperator} from '../enums/filterOperator';
-import {FilterType} from '../enums/filterType';
-import {Sorter} from '../sorter';
-import {SortDirection} from '../enums/sortDirection';
-import {UrlBuilder} from '../../../builders/urlBuilder';
-import {ExtractModelAttributesType} from '../../../types/extractModelAttributesType';
+import { HttpMethod } from '../enums/httpMethod';
+import { Model } from '../../../model';
+import { ModelConstructor } from '../../../contracts/modelConstructor';
+import { Scope } from '../scope';
+import { Filter } from '../filter';
+import { FilterOperator } from '../enums/filterOperator';
+import { FilterType } from '../enums/filterType';
+import { Sorter } from '../sorter';
+import { SortDirection } from '../enums/sortDirection';
+import { UrlBuilder } from '../../../builders/urlBuilder';
+import { ExtractModelAttributesType } from '../../../types/extractModelAttributesType';
 import {
 	ExtractModelPersistedAttributesType
 } from '../../../types/extractModelPersistedAttributesType';
-import {ExtractModelRelationsType} from '../../../types/extractModelRelationsType';
-import {HttpClient} from '../../../httpClient';
-import {AxiosResponse} from 'axios';
-import {Orion} from '../../../orion';
-import {ExtractModelKeyType} from '../../../types/extractModelKeyType';
+import { ExtractModelRelationsType } from '../../../types/extractModelRelationsType';
+import { HttpClient } from '../../../httpClient';
+import { AxiosResponse } from 'axios';
+import { Orion } from '../../../orion';
+import { ExtractModelKeyType } from '../../../types/extractModelKeyType';
 import { AggregateItem } from '../../../types/AggregateItem';
+import { ModelRelations } from '../../../types/ModelRelations';
 
 export class QueryBuilder<
 	M extends Model,
@@ -31,11 +32,11 @@ export class QueryBuilder<
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>;
 	protected httpClient: HttpClient;
 
-	protected includes: string[] = [];
+	protected includes: ModelRelations<Relations>[] = [];
 	protected fetchTrashed: boolean = false;
 	protected fetchOnlyTrashed: boolean = false;
-	protected withCountRelations: string[] = [];
-	protected withExistsRelations: string[] = [];
+	protected withCountRelations: ModelRelations<Relations>[] = [];
+	protected withExistsRelations: ModelRelations<Relations>[] = [];
 	protected withAvgRelations: AggregateItem<Relations>[] = [];
 	protected withSumRelations: AggregateItem<Relations>[] = [];
 	protected withMinRelations: AggregateItem<Relations>[] = [];
@@ -64,7 +65,7 @@ export class QueryBuilder<
 		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			'',
 			HttpMethod.GET,
-			this.prepareQueryParams({limit, page})
+			this.prepareQueryParams({ limit, page })
 		);
 
 		return response.data.data.map((attributes: AllAttributes & Relations) => {
@@ -76,12 +77,12 @@ export class QueryBuilder<
 		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			'/search',
 			HttpMethod.POST,
-			this.prepareQueryParams({limit, page}),
+			this.prepareQueryParams({ limit, page }),
 			{
 				scopes: this.scopes,
 				filters: this.filters,
-				search: {value: this.searchValue},
-				sort: this.sorters,
+				search: { value: this.searchValue },
+				sort: this.sorters
 			}
 		);
 
@@ -116,7 +117,7 @@ export class QueryBuilder<
 			resources: items.map(x => x.$attributes)
 		};
 
-		const response = await this.httpClient.request<{data: Array<AllAttributes & Relations> }>(
+		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			`/batch`,
 			HttpMethod.POST,
 			null,
@@ -125,7 +126,7 @@ export class QueryBuilder<
 
 		return response.data.data.map((attributes) => {
 			return this.hydrate(attributes, response);
-		})
+		});
 	}
 
 	public async update(key: Key, attributes: Attributes): Promise<M> {
@@ -145,12 +146,12 @@ export class QueryBuilder<
 		};
 		items.forEach((v) => data.resources[v.$getKey()] = v.$attributes);
 
-		const response = await this.httpClient.request<{ data: Array< AllAttributes & Relations > }>(
+		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			`batch`,
 			HttpMethod.PATCH,
 			null,
 			data
-		)
+		);
 
 		return response.data.data.map((attributes: AllAttributes & Relations) => {
 			return this.hydrate(attributes, response);
@@ -161,14 +162,13 @@ export class QueryBuilder<
 		const response = await this.httpClient.request<{ data: AllAttributes & Relations }>(
 			`/${key}`,
 			HttpMethod.DELETE,
-			this.prepareQueryParams({force})
+			this.prepareQueryParams({ force })
 		);
 
 		return this.hydrate(response.data.data, response);
 	}
 
-	public async batchDelete(items: Key[]): Promise<M[]>
-	{
+	public async batchDelete(items: Key[]): Promise<M[]> {
 		if (!items.length)
 			return [];
 
@@ -176,7 +176,7 @@ export class QueryBuilder<
 			resources: items
 		};
 
-		const response = await this.httpClient.request<{ data: Array< AllAttributes & Relations > }>(
+		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			`/batch`,
 			HttpMethod.DELETE,
 			null,
@@ -203,7 +203,7 @@ export class QueryBuilder<
 			resources: items
 		};
 
-		const response = await this.httpClient.request<{ data: Array< AllAttributes & Relations > }>(
+		const response = await this.httpClient.request<{ data: Array<AllAttributes & Relations> }>(
 			`/batch/restore`,
 			HttpMethod.POST,
 			null,
@@ -216,7 +216,7 @@ export class QueryBuilder<
 	}
 
 
-	public with(relations: string[]): this {
+	public with(relations: ModelRelations<Relations>[]): this {
 		this.includes = relations;
 
 		return this;
@@ -261,7 +261,7 @@ export class QueryBuilder<
 	public hydrate(raw: AllAttributes & Relations, response?: AxiosResponse): M {
 		const model = new this.modelConstructor();
 
-		for (const field of Object.keys(raw)) {
+		for (const field of Object.keys(raw as Record<string, unknown>)) {
 			const rawValue = raw[field];
 
 			if (typeof model[field] === 'function') {
@@ -293,14 +293,14 @@ export class QueryBuilder<
 	 * The relations need to be whitelisted in the controller.
 	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
 	 */
-	public withCount(relations: string[] | string): this {
+	public withCount(relations: ModelRelations<Relations>[] | ModelRelations<Relations>): this {
 		if (!Array.isArray(relations)) {
 			relations = [relations];
 		}
 
 		this.withCountRelations.push(...relations);
 
-		return this
+		return this;
 	}
 
 	/**
@@ -309,14 +309,14 @@ export class QueryBuilder<
 	 * @link https://tailflow.github.io/laravel-orion-docs/v2.x/guide/search.html#aggregates
 	 * @param relations
 	 */
-	public withExists(relations: string[] | string): this {
+	public withExists(relations: ModelRelations<Relations>[] | ModelRelations<Relations>): this {
 		if (!Array.isArray(relations)) {
 			relations = [relations];
 		}
 
 		this.withExistsRelations.push(...relations);
 
-		return this
+		return this;
 	}
 
 	/**
@@ -332,7 +332,7 @@ export class QueryBuilder<
 
 		this.withAvgRelations.push(...relations);
 
-		return this
+		return this;
 	}
 
 	/**
@@ -348,7 +348,7 @@ export class QueryBuilder<
 
 		this.withSumRelations.push(...relations);
 
-		return this
+		return this;
 	}
 
 	/**
@@ -364,7 +364,7 @@ export class QueryBuilder<
 
 		this.withMinRelations.push(...relations);
 
-		return this
+		return this;
 	}
 
 	/**
@@ -380,7 +380,7 @@ export class QueryBuilder<
 
 		this.withMaxRelations.push(...relations);
 
-		return this
+		return this;
 	}
 
 	public getHttpClient(): HttpClient {
@@ -422,6 +422,7 @@ export class QueryBuilder<
 
 		if (this.withMinRelations.length > 0) {
 			operationParams.with_min = this.withMinRelations.map((item) => {
+				item.relation;
 				return `${item.relation}.${item.column}`;
 			}).join(',');
 		}
