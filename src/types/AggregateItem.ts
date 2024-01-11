@@ -1,6 +1,6 @@
 import { ModelRelations } from './ModelRelations';
 
 export type AggregateItem<Relations> = {
-	relation: string & ModelRelations<Relations>;
+	relation: ModelRelations<Relations>;
 	column: string;
 }

@@ -32,7 +32,7 @@ export class QueryBuilder<
 	protected modelConstructor: ModelConstructor<M, Attributes, PersistedAttributes, Relations, Key>;
 	protected httpClient: HttpClient;
 
-	protected includes: ModelRelations<Relations>[] = [];
+	protected includes: string[] = [];
 	protected fetchTrashed: boolean = false;
 	protected fetchOnlyTrashed: boolean = false;
 	protected withCountRelations: ModelRelations<Relations>[] = [];
