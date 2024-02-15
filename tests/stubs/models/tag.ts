@@ -1,7 +1,7 @@
 import { Model } from '../../../src/model';
 import Post from './post';
 import { BelongsToMany } from '../../../src/drivers/default/relations/belongsToMany';
-import { DefaultPersistedAttributes } from '../../../lib/types/defaultPersistedAttributes';
+import { DefaultPersistedAttributes } from '../../../src/types/defaultPersistedAttributes';
 
 export default class Tag extends Model<{
 	content: string;

@@ -1,7 +1,7 @@
 import { Model } from '../../../src/model';
 import Post from './post';
 import { HasMany } from '../../../src/drivers/default/relations/hasMany';
-import { DefaultPersistedAttributes } from '../../../lib/types/defaultPersistedAttributes';
+import { DefaultPersistedAttributes } from '../../../src/types/defaultPersistedAttributes';
 
 export type UserAttributes = {
 	name: string;
